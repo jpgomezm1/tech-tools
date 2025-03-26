@@ -1,4 +1,3 @@
-
 import React from "react";
 import { motion } from "framer-motion";
 import { ArrowDownCircle, Sparkles, Zap } from "lucide-react";
@@ -115,7 +114,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onOpenModal }) => {
         </div>
       </div>
 
-      <div className="text-center max-w-5xl mx-auto z-10 relative">
+      <div className="text-center max-w-5xl mx-auto z-10 relative flex flex-col items-center">
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -165,7 +164,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onOpenModal }) => {
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.5, duration: 0.5 }}
-          className="flex justify-center"
+          className="flex flex-col items-center w-full"
         >
           <motion.button
             whileHover={{ 
@@ -196,19 +195,19 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onOpenModal }) => {
               }}
             />
           </motion.button>
-        </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1, duration: 0.5 }}
-          className="absolute bottom-10 left-0 right-0 flex justify-center"
-        >
           <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1, duration: 0.5 }}
+            className="mt-10 flex justify-center w-full"
           >
-            <ArrowDownCircle className="w-10 h-10 text-irrelevant-light/50" />
+            <motion.div
+              animate={{ y: [0, 10, 0] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <ArrowDownCircle className="w-10 h-10 text-irrelevant-light/50" />
+            </motion.div>
           </motion.div>
         </motion.div>
       </div>
