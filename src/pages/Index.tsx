@@ -1,12 +1,48 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import HeroSection from "@/components/HeroSection";
+import RegistrationModal from "@/components/RegistrationModal";
+import ToolsRepository from "@/components/ToolsRepository";
+import CuratedCollections from "@/components/CuratedCollections";
+import Newsletter from "@/components/Newsletter";
 
 const Index = () => {
+  const [showModal, setShowModal] = useState(false);
+  const [isRegistered, setIsRegistered] = useState(false);
+
+  const handleModalClose = () => {
+    setShowModal(false);
+  };
+
+  const handleModalSubmit = () => {
+    setIsRegistered(true);
+    setShowModal(false);
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen bg-irrelevant-dark overflow-x-hidden">
+      <HeroSection onOpenModal={() => setShowModal(true)} />
+      
+      <RegistrationModal
+        isOpen={showModal}
+        onClose={handleModalClose}
+        onSubmit={handleModalSubmit}
+      />
+      
+      <AnimatePresence>
+        {isRegistered && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <ToolsRepository />
+            <CuratedCollections />
+            <Newsletter />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
