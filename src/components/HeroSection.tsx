@@ -1,12 +1,14 @@
+
 import React from "react";
 import { motion } from "framer-motion";
-import { ArrowDownCircle, Sparkles, Zap } from "lucide-react";
+import { ArrowDownCircle, Key, Sparkles, Zap } from "lucide-react";
 
 interface HeroSectionProps {
   onOpenModal: () => void;
+  isUnlocked: boolean;
 }
 
-const HeroSection: React.FC<HeroSectionProps> = ({ onOpenModal }) => {
+const HeroSection: React.FC<HeroSectionProps> = ({ onOpenModal, isUnlocked }) => {
   return (
     <motion.section
       initial={{ opacity: 0 }}
@@ -157,7 +159,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onOpenModal }) => {
           transition={{ delay: 0.4, duration: 0.5 }}
           className="text-lg md:text-xl lg:text-2xl mb-10 text-irrelevant-light/90 max-w-3xl mx-auto"
         >
-          Automatizamos, optimizamos y creamos magia con estas herramientas. Y ahora, son tuyas.
+          Hay herramientas que te cambian la vida. Nosotros las usamos. Ahora tú también puedes.
         </motion.p>
 
         <motion.div
@@ -174,9 +176,23 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onOpenModal }) => {
             whileTap={{ scale: 0.98 }}
             onClick={onOpenModal}
             className="flex items-center gap-2 bg-gradient-to-r from-irrelevant-violet to-irrelevant-purple text-white font-medium py-4 px-8 rounded-full shadow-lg shadow-irrelevant-violet/20 transition-all duration-300 group relative overflow-hidden"
+            animate={!isUnlocked ? {
+              boxShadow: ["0 0 0px rgba(156, 107, 255, 0.3)", "0 0 20px rgba(156, 107, 255, 0.6)", "0 0 0px rgba(156, 107, 255, 0.3)"]
+            } : {}}
+            transition={!isUnlocked ? {
+              duration: 2,
+              repeat: Infinity,
+              repeatType: "reverse"
+            } : {}}
           >
-            <span className="relative z-10">Descubrir el arsenal</span>
-            <Zap className="w-5 h-5 group-hover:rotate-12 transition-transform relative z-10" />
+            <span className="relative z-10">
+              {isUnlocked ? "Explorar el arsenal" : "Acceder al arsenal"}
+            </span>
+            {isUnlocked ? (
+              <Zap className="w-5 h-5 group-hover:rotate-12 transition-transform relative z-10" />
+            ) : (
+              <Key className="w-5 h-5 group-hover:rotate-12 transition-transform relative z-10" />
+            )}
             
             {/* Button glow effect */}
             <motion.div 
@@ -196,10 +212,38 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onOpenModal }) => {
             />
           </motion.button>
 
+          {isUnlocked ? (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+              className="mt-4 py-2 px-4 rounded-full bg-irrelevant-violet/20 text-irrelevant-light/90 text-sm flex items-center gap-2"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-green-400">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+              Ya eres parte del arsenal
+            </motion.div>
+          ) : (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.7 }}
+              transition={{ delay: 1, duration: 0.5 }}
+              className="mt-4 text-irrelevant-light/70 text-sm flex items-center gap-1.5"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-irrelevant-violet">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+              Necesitas la llave para continuar
+            </motion.div>
+          )}
+
           <motion.div
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1, duration: 0.5 }}
+            animate={{ opacity: isUnlocked ? 1 : 0 }}
+            transition={{ delay: isUnlocked ? 1 : 0, duration: 0.5 }}
             className="mt-10 flex justify-center w-full"
           >
             <motion.div
@@ -211,6 +255,18 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onOpenModal }) => {
           </motion.div>
         </motion.div>
       </div>
+
+      {/* Visual indicator for locked scroll */}
+      {!isUnlocked && (
+        <motion.div 
+          className="absolute bottom-16 left-0 right-0 h-32 pointer-events-none"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: [0.3, 0.5, 0.3] }}
+          transition={{ duration: 3, repeat: Infinity }}
+        >
+          <div className="h-full bg-gradient-to-t from-irrelevant-dark to-transparent" />
+        </motion.div>
+      )}
     </motion.section>
   );
 };
