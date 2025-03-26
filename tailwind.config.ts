@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -124,11 +125,6 @@ export default {
           "0%, 100%": { opacity: "1" },
           "50%": { opacity: "0.8" },
         },
-        "shake": {
-          "0%, 100%": { transform: "translateX(0)" },
-          "10%, 30%, 50%, 70%, 90%": { transform: "translateX(-4px)" },
-          "20%, 40%, 60%, 80%": { transform: "translateX(4px)" },
-        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -142,7 +138,6 @@ export default {
         "slide-in-bottom": "slide-in-bottom 0.3s ease-out",
         "slide-in-top": "slide-in-top 0.3s ease-out",
         "pulse-subtle": "pulse-subtle 2s ease-in-out infinite",
-        "shake": "shake 0.5s ease-in-out",
       },
       backdropBlur: {
         xs: "2px",

@@ -1,74 +1,12 @@
-
-import React, { useState } from "react";
+import React from "react";
 import { motion } from "framer-motion";
-import { ArrowDownCircle, Sparkles, Zap, Key, Mail, Unlock } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { ArrowDownCircle, Sparkles, Zap } from "lucide-react";
 
 interface HeroSectionProps {
   onOpenModal: () => void;
-  isScrollLocked: boolean;
-  onUnlock: (method: string) => void;
 }
 
-const HeroSection: React.FC<HeroSectionProps> = ({ onOpenModal, isScrollLocked, onUnlock }) => {
-  const [input, setInput] = useState("");
-  const [inputMode, setInputMode] = useState<"email" | "phrase">("email");
-  const [isLoading, setIsLoading] = useState(false);
-
-  const secretPhrases = [
-    "abracadabra",
-    "irrelevant",
-    "arsenal secreto",
-    "dame acceso",
-    "quiero entrar",
-    "automatiza todo"
-  ];
-
-  const validateEmail = (email: string) => {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInput(e.target.value);
-    // Auto-detect if user is typing an email or a phrase
-    if (e.target.value.includes('@')) {
-      setInputMode("email");
-    } else if (e.target.value.length > 0 && !e.target.value.includes('@')) {
-      setInputMode("phrase");
-    }
-  };
-
-  const handleSubmit = () => {
-    if (!input) return;
-    
-    setIsLoading(true);
-    
-    // Simulate API call
-    setTimeout(() => {
-      if (inputMode === "email" && validateEmail(input)) {
-        onUnlock("email");
-      } else if (inputMode === "phrase" && secretPhrases.some(phrase => input.toLowerCase().includes(phrase))) {
-        onUnlock("phrase");
-      } else {
-        // Handle invalid input
-        const errorMessage = inputMode === "email" 
-          ? "Escribe un email válido para desbloquear" 
-          : "Esa frase no abre ninguna puerta... ¿Pruebas otra?";
-        
-        // Animate the input field to indicate error
-        const inputElement = document.getElementById("unlock-input");
-        if (inputElement) {
-          inputElement.classList.add("animate-shake");
-          setTimeout(() => {
-            inputElement.classList.remove("animate-shake");
-          }, 500);
-        }
-      }
-      setIsLoading(false);
-    }, 800);
-  };
-
+const HeroSection: React.FC<HeroSectionProps> = ({ onOpenModal }) => {
   return (
     <motion.section
       initial={{ opacity: 0 }}
@@ -217,83 +155,28 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onOpenModal, isScrollLocked, 
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.4, duration: 0.5 }}
-          className="text-lg md:text-xl lg:text-2xl mb-12 text-irrelevant-light/90 max-w-3xl mx-auto"
+          className="text-lg md:text-xl lg:text-2xl mb-10 text-irrelevant-light/90 max-w-3xl mx-auto"
         >
-          Hay herramientas que te cambian la vida. Nosotros las usamos. Ahora tú también puedes.
+          Automatizamos, optimizamos y creamos magia con estas herramientas. Y ahora, son tuyas.
         </motion.p>
 
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.5, duration: 0.5 }}
-          className="flex flex-col items-center w-full max-w-md"
+          className="flex flex-col items-center w-full"
         >
-          {/* Unlock section */}
-          <div className="w-full mb-6 perspective relative">
-            <div className="relative flex items-center w-full">
-              <div className="absolute left-3 text-irrelevant-light/60">
-                {inputMode === "email" ? (
-                  <Mail className="w-5 h-5" />
-                ) : (
-                  <Key className="w-5 h-5" />
-                )}
-              </div>
-              
-              <Input
-                id="unlock-input"
-                type={inputMode === "email" ? "email" : "text"}
-                placeholder={inputMode === "email" 
-                  ? "Tu email para desbloquear el arsenal" 
-                  : "O escribe una frase clave para entrar..."
-                }
-                className="w-full pl-10 pr-4 py-3 h-14 bg-white/5 backdrop-blur-md border border-irrelevant-violet/20 focus:border-irrelevant-violet/60 rounded-lg text-irrelevant-light text-md placeholder-irrelevant-light/40 shadow-[0_0_15px_rgba(156,107,255,0.1)] transition-all duration-300 focus:shadow-[0_0_20px_rgba(156,107,255,0.25)]"
-                value={input}
-                onChange={handleInputChange}
-                onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
-              />
-              
-              <div className="absolute right-3 text-xs text-irrelevant-light/40 pointer-events-none">
-                {inputMode === "email" ? "Email" : "Frase clave"}
-              </div>
-            </div>
-            
-            {/* Input mode toggle */}
-            <motion.button
-              type="button"
-              onClick={() => setInputMode(inputMode === "email" ? "phrase" : "email")}
-              className="absolute -bottom-7 left-1/2 transform -translate-x-1/2 text-xs text-irrelevant-light/50 hover:text-irrelevant-light/80 transition-colors duration-300 flex items-center gap-1"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <span>Cambiar a {inputMode === "email" ? "frase clave" : "email"}</span>
-            </motion.button>
-          </div>
-          
-          {/* Unlock button */}
           <motion.button
             whileHover={{ 
               scale: 1.05,
               boxShadow: "0 0 25px rgba(156, 107, 255, 0.5)"
             }}
             whileTap={{ scale: 0.98 }}
-            onClick={handleSubmit}
-            disabled={isLoading || !input}
-            className="flex items-center gap-2 bg-gradient-to-r from-irrelevant-violet to-irrelevant-purple text-white font-medium py-4 px-8 rounded-full shadow-lg shadow-irrelevant-violet/20 transition-all duration-300 group relative overflow-hidden disabled:opacity-60 disabled:cursor-not-allowed"
+            onClick={onOpenModal}
+            className="flex items-center gap-2 bg-gradient-to-r from-irrelevant-violet to-irrelevant-purple text-white font-medium py-4 px-8 rounded-full shadow-lg shadow-irrelevant-violet/20 transition-all duration-300 group relative overflow-hidden"
           >
-            <span className="relative z-10">
-              {isLoading ? "Desbloqueando..." : "Entrar sin romper nada"}
-            </span>
-            {isLoading ? (
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-                className="relative z-10"
-              >
-                <Unlock className="w-5 h-5" />
-              </motion.div>
-            ) : (
-              <Zap className="w-5 h-5 group-hover:rotate-12 transition-transform relative z-10" />
-            )}
+            <span className="relative z-10">Descubrir el arsenal</span>
+            <Zap className="w-5 h-5 group-hover:rotate-12 transition-transform relative z-10" />
             
             {/* Button glow effect */}
             <motion.div 
@@ -313,31 +196,19 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onOpenModal, isScrollLocked, 
             />
           </motion.button>
 
-          {/* Extra hint for users */}
-          <motion.p
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.7, duration: 0.5 }}
-            className="mt-8 text-sm text-irrelevant-light/50"
+            transition={{ delay: 1, duration: 0.5 }}
+            className="mt-10 flex justify-center w-full"
           >
-            Una comunidad tech que construye mientras aprende. Sin presiones. Sin humo.
-          </motion.p>
-
-          {isScrollLocked && (
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1, duration: 0.5 }}
-              className="mt-10 flex justify-center w-full"
+              animate={{ y: [0, 10, 0] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
             >
-              <motion.div
-                animate={{ y: [0, 10, 0] }}
-                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-              >
-                <ArrowDownCircle className="w-10 h-10 text-irrelevant-light/50" />
-              </motion.div>
+              <ArrowDownCircle className="w-10 h-10 text-irrelevant-light/50" />
             </motion.div>
-          )}
+          </motion.div>
         </motion.div>
       </div>
     </motion.section>
