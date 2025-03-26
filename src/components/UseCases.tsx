@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Zap, Rocket, Sparkles, Workflow, X, Filter, Play, Link2, Copy, ChevronLeft, ArrowUpRight, ExternalLink } from "lucide-react";
@@ -570,7 +571,6 @@ const UseCases: React.FC = () => {
                     className="group perspective"
                     onClick={() => setSelectedCase(useCase.id)}
                   >
-                    
                     <div 
                       className={`h-full rounded-xl overflow-hidden relative gradient-border glass-panel cursor-pointer transition-all duration-300 group-hover:shadow-2xl ${useCase.glow}`}
                     >
@@ -682,3 +682,26 @@ const UseCases: React.FC = () => {
                 >
                   <div className="w-16 h-16 mx-auto rounded-full bg-white/5 flex items-center justify-center mb-4">
                     <Filter className="w-8 h-8 text-irrelevant-light/60" />
+                  </div>
+                  <h3 className="text-2xl font-providence text-irrelevant-light mb-2">
+                    No hay flujos con estos filtros
+                  </h3>
+                  <p className="text-irrelevant-light/70 max-w-xl mx-auto">
+                    Prueba a cambiar los filtros o revisar otras categorías para encontrar lo que buscas.
+                  </p>
+                </motion.div>
+              )}
+            </motion.div>
+          ) : (
+            <UseCaseDetail 
+              useCase={selectedCaseData as typeof useCases[0]} 
+              onBack={() => setSelectedCase(null)} 
+            />
+          )}
+        </AnimatePresence>
+      </div>
+    </section>
+  );
+};
+
+export default UseCases;
