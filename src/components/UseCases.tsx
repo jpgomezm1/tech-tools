@@ -1,13 +1,11 @@
-
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, Zap, Rocket, Sparkles, Workflow, X, Filter, Play, Link2, Copy, ChevronLeft, ArrowUpRight, ExternalLink } from "lucide-react";
+import { ArrowRight, Zap, Rocket, Sparkles, Workflow, X, Filter, Play, Link2, Copy, ChevronLeft, ArrowUpRight, ExternalLink, Check } from "lucide-react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 
-// Enhanced use cases with better storytelling and more detailed information
 const useCases = [
   {
     id: 1,
@@ -119,13 +117,11 @@ const useCases = [
   },
 ];
 
-// All possible filter options
 const filterOptions = {
   areas: ["Ventas", "Marketing", "Operaciones", "Finanzas", "Atención al cliente"],
   objectives: ["Ahorrar tiempo", "Aumentar ventas", "Tomar decisiones", "Escalar sin equipo"]
 };
 
-// Component for detailed view of a use case
 const UseCaseDetail = ({ 
   useCase, 
   onBack 
@@ -190,7 +186,6 @@ const UseCaseDetail = ({
         </p>
       </motion.div>
       
-      {/* Problema y Objetivo */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -220,7 +215,6 @@ const UseCaseDetail = ({
         </Card>
       </motion.div>
       
-      {/* Diagrama de flujo */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -266,7 +260,6 @@ const UseCaseDetail = ({
         </div>
       </motion.div>
       
-      {/* Beneficios */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -288,7 +281,6 @@ const UseCaseDetail = ({
         </div>
       </motion.div>
       
-      {/* Testimonio */}
       {useCase.testimonial && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -306,7 +298,6 @@ const UseCaseDetail = ({
         </motion.div>
       )}
       
-      {/* Video o Vista previa */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -347,7 +338,6 @@ const UseCaseDetail = ({
         )}
       </motion.div>
       
-      {/* Call to Action */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -448,7 +438,6 @@ const UseCases: React.FC = () => {
                 </p>
               </motion.div>
               
-              {/* Filters */}
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -588,7 +577,6 @@ const UseCases: React.FC = () => {
                       
                       <div className="relative z-10 p-8 h-full flex flex-col justify-between">
                         <div>
-                          {/* Tag badges */}
                           <div className="flex flex-wrap gap-2 mb-4">
                             {useCase.tags.map((tag, i) => (
                               <motion.div 
@@ -623,7 +611,6 @@ const UseCases: React.FC = () => {
                             {useCase.description}
                           </p>
                           
-                          {/* Tools section */}
                           <div className="flex flex-wrap gap-2">
                             {useCase.tools.map((tool, i) => (
                               <motion.div
@@ -657,7 +644,6 @@ const UseCases: React.FC = () => {
                         </motion.div>
                       </div>
                       
-                      {/* Animated glow effect on hover */}
                       <motion.div 
                         className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                         animate={{ 
