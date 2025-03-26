@@ -6,6 +6,9 @@ import RegistrationModal from "@/components/RegistrationModal";
 import ToolsRepository from "@/components/ToolsRepository";
 import CuratedCollections from "@/components/CuratedCollections";
 import Newsletter from "@/components/Newsletter";
+import UseCases from "@/components/UseCases";
+import Courses from "@/components/Courses";
+import Community from "@/components/Community";
 
 const Index = () => {
   const [showModal, setShowModal] = useState(false);
@@ -36,10 +39,16 @@ const Index = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={{ duration: 0.6 }}
           >
             <ToolsRepository />
             <CuratedCollections />
-            <Newsletter />
+            <UseCases />
+            <Courses />
+            <div className="space-y-0">
+              <Newsletter />
+              <Community />
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
