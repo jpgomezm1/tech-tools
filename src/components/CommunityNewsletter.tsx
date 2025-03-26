@@ -107,9 +107,9 @@ const CommunityNewsletter: React.FC = () => {
                 </h2>
 
                 <p className="text-lg text-irrelevant-light/80 text-center mb-8 max-w-2xl mx-auto">
-                  Cada semana desbloqueamos una herramienta de IA que multiplica tu productividad × 10. 
+                  Somos un grupo de locos que quiere romperla con IA. 
                   <span className="block mt-2 italic font-semibold text-white">
-                    El grupo de WhatsApp es donde están pasando cosas que no puedes ni imaginar.
+                    Dos canales, un solo objetivo: hacer que las cosas pasen.
                   </span>
                 </p>
 
@@ -117,6 +117,7 @@ const CommunityNewsletter: React.FC = () => {
                   <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-5xl mx-auto w-full">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                       <div className="relative group">
+                        {/* Email input for Newsletter */}
                         <div className="absolute -inset-0.5 bg-gradient-to-r from-violet-600 to-indigo-600 rounded-xl blur opacity-50 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
                         <div className="relative">
                           <FormField
@@ -129,7 +130,7 @@ const CommunityNewsletter: React.FC = () => {
                                     <Input
                                       {...field}
                                       type="email"
-                                      placeholder="tu@email.com"
+                                      placeholder="Email para las joyas tech 🔮"
                                       className="w-full bg-black/60 border border-white/10 rounded-xl pl-6 pr-36 py-6 focus:outline-none focus:ring-2 focus:ring-violet-500/50 text-irrelevant-light placeholder:text-white/40 h-auto text-base"
                                     />
                                     <Button
@@ -148,6 +149,7 @@ const CommunityNewsletter: React.FC = () => {
                       </div>
 
                       <div className="relative group">
+                        {/* WhatsApp input for Community Group */}
                         <div className="absolute -inset-0.5 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl blur opacity-50 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
                         <div className="relative">
                           <FormField
@@ -160,7 +162,7 @@ const CommunityNewsletter: React.FC = () => {
                                     <Input
                                       {...field}
                                       type="tel"
-                                      placeholder="+34 600 00 00 00"
+                                      placeholder="WhatsApp para el grupo que rompe todo 🚀"
                                       className="w-full bg-black/60 border border-white/10 rounded-xl pl-6 pr-36 py-6 focus:outline-none focus:ring-2 focus:ring-green-500/50 text-irrelevant-light placeholder:text-white/40 h-auto text-base"
                                     />
                                     <Button
