@@ -10,11 +10,7 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 
 const formSchema = z.object({
-  email: z.string().email("Email inválido").optional(),
-  whatsapp: z.string().min(9, "Número inválido").optional(),
-}).refine(data => data.email || data.whatsapp, {
-  message: "Proporciona al menos un método de contacto",
-  path: ["email"],
+  email: z.string().email("Email inválido"),
 });
 
 const CommunityNewsletter: React.FC = () => {
@@ -24,7 +20,6 @@ const CommunityNewsletter: React.FC = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",
-      whatsapp: "",
     },
   });
 
@@ -103,85 +98,85 @@ const CommunityNewsletter: React.FC = () => {
                 </div>
 
                 <h2 className="text-4xl md:text-5xl lg:text-6xl font-providence text-center mb-4 text-white tracking-tight leading-tight">
-                  <span className="text-gradient bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500">Tu cerebro necesita esto.</span>
+                  <span className="text-gradient bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500">Dos caminos, un mismo objetivo: que trabajes menos y ganes más.</span>
                 </h2>
 
                 <p className="text-lg text-irrelevant-light/80 text-center mb-8 max-w-2xl mx-auto">
-                  Somos un grupo de locos que quiere romperla con IA. 
+                  Esto no es contenido. Es una revolución.
                   <span className="block mt-2 italic font-semibold text-white">
-                    Dos canales, un solo objetivo: hacer que las cosas pasen.
+                    Únete a los que están un paso adelante en la carrera de la IA.
                   </span>
                 </p>
 
-                <Form {...form}>
-                  <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-5xl mx-auto w-full">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                      <div className="relative group">
-                        {/* Email input for Newsletter */}
-                        <div className="absolute -inset-0.5 bg-gradient-to-r from-violet-600 to-indigo-600 rounded-xl blur opacity-50 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
-                        <div className="relative">
-                          <FormField
-                            control={form.control}
-                            name="email"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormControl>
-                                  <div className="relative">
-                                    <Input
-                                      {...field}
-                                      type="email"
-                                      placeholder="Email para las joyas tech 🔮"
-                                      className="w-full bg-black/60 border border-white/10 rounded-xl pl-6 pr-36 py-6 focus:outline-none focus:ring-2 focus:ring-violet-500/50 text-irrelevant-light placeholder:text-white/40 h-auto text-base"
-                                    />
-                                    <Button
-                                      type="submit"
-                                      className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-medium py-2 px-4 rounded-lg hover:shadow-lg hover:shadow-violet-500/20 transition-all duration-300 flex items-center gap-2 h-auto"
-                                    >
-                                      <span>Recibir joyas</span>
-                                      <Zap className="w-4 h-4" />
-                                    </Button>
-                                  </div>
-                                </FormControl>
-                              </FormItem>
-                            )}
-                          />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 max-w-5xl mx-auto">
+                  <div className="bg-black/50 backdrop-blur-md p-6 rounded-xl border border-white/10 flex flex-col items-center">
+                    <div className="w-12 h-12 bg-gradient-to-r from-violet-600 to-indigo-600 rounded-full flex items-center justify-center mb-4">
+                      <Zap className="w-6 h-6 text-white" />
+                    </div>
+                    <h3 className="text-xl font-bold text-white mb-3">Newsletter Tech</h3>
+                    <p className="text-center text-white/70 mb-6">
+                      Joyas de herramientas tech cada semana, seleccionadas por el equipo de irrelevant para multiplicar tu productividad.
+                    </p>
+                    
+                    <Form {...form}>
+                      <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
+                        <div className="relative group">
+                          <div className="absolute -inset-0.5 bg-gradient-to-r from-violet-600 to-indigo-600 rounded-xl blur opacity-50 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
+                          <div className="relative">
+                            <FormField
+                              control={form.control}
+                              name="email"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormControl>
+                                    <div className="relative">
+                                      <Input
+                                        {...field}
+                                        type="email"
+                                        placeholder="Tu email para recibir joyas tech 🔮"
+                                        className="w-full bg-black/60 border border-white/10 rounded-xl pl-6 pr-36 py-6 focus:outline-none focus:ring-2 focus:ring-violet-500/50 text-irrelevant-light placeholder:text-white/40 h-auto text-base"
+                                      />
+                                      <Button
+                                        type="submit"
+                                        className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-medium py-2 px-4 rounded-lg hover:shadow-lg hover:shadow-violet-500/20 transition-all duration-300 flex items-center gap-2 h-auto"
+                                      >
+                                        <span>Recibir joyas</span>
+                                        <Zap className="w-4 h-4" />
+                                      </Button>
+                                    </div>
+                                  </FormControl>
+                                </FormItem>
+                              )}
+                            />
+                          </div>
                         </div>
-                      </div>
+                      </form>
+                    </Form>
+                  </div>
 
-                      <div className="relative group">
-                        {/* WhatsApp input for Community Group */}
-                        <div className="absolute -inset-0.5 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl blur opacity-50 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
-                        <div className="relative">
-                          <FormField
-                            control={form.control}
-                            name="whatsapp"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormControl>
-                                  <div className="relative">
-                                    <Input
-                                      {...field}
-                                      type="tel"
-                                      placeholder="WhatsApp para el grupo que rompe todo 🚀"
-                                      className="w-full bg-black/60 border border-white/10 rounded-xl pl-6 pr-36 py-6 focus:outline-none focus:ring-2 focus:ring-green-500/50 text-irrelevant-light placeholder:text-white/40 h-auto text-base"
-                                    />
-                                    <Button
-                                      type="submit"
-                                      className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-medium py-2 px-4 rounded-lg hover:shadow-lg hover:shadow-green-500/20 transition-all duration-300 flex items-center gap-2 h-auto"
-                                    >
-                                      <span>Entrar al grupo</span>
-                                      <Rocket className="w-4 h-4" />
-                                    </Button>
-                                  </div>
-                                </FormControl>
-                              </FormItem>
-                            )}
-                          />
-                        </div>
+                  <div className="bg-black/50 backdrop-blur-md p-6 rounded-xl border border-white/10 flex flex-col items-center">
+                    <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full flex items-center justify-center mb-4">
+                      <Rocket className="w-6 h-6 text-white" />
+                    </div>
+                    <h3 className="text-xl font-bold text-white mb-3">Comunidad WhatsApp</h3>
+                    <p className="text-center text-white/70 mb-6">
+                      Comunidad activa donde se comparten flujos, casos reales, ideas y recomendaciones para automatizar negocios.
+                    </p>
+                    
+                    <div className="relative group w-full mt-auto">
+                      <div className="absolute -inset-0.5 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl blur opacity-50 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
+                      <div className="relative">
+                        <Button
+                          onClick={() => window.open("https://chat.whatsapp.com/IrrelevantGroupLinkFake", "_blank")}
+                          className="w-full bg-black/80 border border-white/10 text-white py-6 px-6 rounded-xl hover:bg-black/60 transition-all duration-300 flex items-center justify-center gap-3 h-auto"
+                        >
+                          <span className="font-medium">Entrar al grupo</span>
+                          <Rocket className="w-5 h-5" />
+                        </Button>
                       </div>
                     </div>
-                  </form>
-                </Form>
+                  </div>
+                </div>
               </div>
             </div>
             
