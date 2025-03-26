@@ -1,11 +1,12 @@
 
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, Filter, ArrowRight, Zap, Star, XCircle } from "lucide-react";
+import { Search, Filter, Zap, Star, XCircle, ExternalLink, Youtube, BookOpen, Podcast, Lightbulb } from "lucide-react";
 import { Command, CommandInput, CommandList, CommandEmpty, CommandGroup, CommandItem } from "@/components/ui/command";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 // Static tools data
 const toolsData = [
@@ -19,6 +20,21 @@ const toolsData = [
     useCase: ["Crear contenido", "Automatizar tareas", "Análisis de datos"],
     recommended: true,
     logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/ChatGPT_logo.svg/1024px-ChatGPT_logo.svg.png",
+    fullDescription: "ChatGPT es un modelo de lenguaje diseñado para entender y generar texto similar al humano. Puede ayudarte con escritura creativa, responder preguntas, asistir en la programación y mucho más.",
+    tasks: [
+      "Escribir contenido SEO optimizado",
+      "Generar ideas para marketing",
+      "Resumir textos extensos",
+      "Crear scripts para videos",
+      "Responder preguntas de clientes"
+    ],
+    resources: [
+      { type: "youtube", title: "Cómo usar ChatGPT en 2024", url: "#" },
+      { type: "blog", title: "Prompts avanzados para ChatGPT", url: "#" },
+      { type: "podcast", title: "El futuro de la IA conversacional", url: "#" },
+      { type: "course", title: "Masterclass gratuita: ChatGPT para negocios", url: "#" }
+    ],
+    teamTip: "En irrelevant lo usamos para redactar emails personalizados y crear contenido base que luego personalizamos."
   },
   {
     id: 2,
@@ -30,6 +46,20 @@ const toolsData = [
     useCase: ["Automatizar tareas", "Integrar servicios"],
     recommended: true,
     logo: "https://cdn.zapier.com/zapier/images/logos/zapier-logo-inverse.svg",
+    fullDescription: "Zapier permite conectar más de 3,000 apps y servicios web sin necesidad de código. Automatiza tareas repetitivas y crea flujos de trabajo personalizados entre aplicaciones.",
+    tasks: [
+      "Sincronizar leads entre CRM y hojas de cálculo",
+      "Automatizar respuestas en redes sociales",
+      "Crear tickets de soporte desde emails",
+      "Organizar tareas entre equipos"
+    ],
+    resources: [
+      { type: "youtube", title: "Zapier desde cero: Tutorial completo", url: "#" },
+      { type: "blog", title: "10 automatizaciones que necesitas implementar", url: "#" },
+      { type: "podcast", title: "Entrevista con fundadores de Zapier", url: "#" },
+      { type: "course", title: "Curso gratuito: De principiante a experto en Zapier", url: "#" }
+    ],
+    teamTip: "Lo combinamos con Make y Google Sheets para rastrear conversiones y automatizar el seguimiento de clientes."
   },
   {
     id: 3,
@@ -41,6 +71,20 @@ const toolsData = [
     useCase: ["Gestionar proyectos", "Crear contenido", "Trabajar en equipo"],
     recommended: true,
     logo: "https://upload.wikimedia.org/wikipedia/commons/4/45/Notion_app_logo.png",
+    fullDescription: "Notion es un espacio de trabajo todo-en-uno para notas, tareas, wikis y bases de datos. Combina documentos, proyectos y colaboración en una sola herramienta altamente personalizable.",
+    tasks: [
+      "Crear un hub de conocimiento para tu equipo",
+      "Gestionar proyectos con vistas Kanban",
+      "Documentar procesos empresariales",
+      "Planificar contenido editorial"
+    ],
+    resources: [
+      { type: "youtube", title: "Notion para principiantes: Guía completa", url: "#" },
+      { type: "blog", title: "Cómo estructurar tu Notion para máxima productividad", url: "#" },
+      { type: "podcast", title: "Productividad personal con Notion", url: "#" },
+      { type: "course", title: "Plantillas gratuitas de Notion para cualquier caso", url: "#" }
+    ],
+    teamTip: "Nuestra herramienta principal para documentación interna y gestión de contenidos. Lo conectamos con todo."
   },
   {
     id: 4,
@@ -52,6 +96,21 @@ const toolsData = [
     useCase: ["Crear contenido", "Diseño gráfico", "Marketing"],
     recommended: true,
     logo: "https://upload.wikimedia.org/wikipedia/commons/e/e6/Midjourney_Emblem.png",
+    fullDescription: "Midjourney es una herramienta de IA que genera imágenes de alta calidad a partir de descripciones textuales. Ideal para crear ilustraciones, conceptos y diseños visuales únicos.",
+    tasks: [
+      "Generar conceptos visuales para productos",
+      "Crear ilustraciones para contenido",
+      "Diseñar mockups rápidos",
+      "Producir arte para redes sociales",
+      "Inspirar sesiones creativas"
+    ],
+    resources: [
+      { type: "youtube", title: "Domina Midjourney: Guía paso a paso", url: "#" },
+      { type: "blog", title: "Prompts avanzados para Midjourney v6", url: "#" },
+      { type: "podcast", title: "El futuro del arte generativo", url: "#" },
+      { type: "course", title: "De cero a experto: Curso gratuito de Midjourney", url: "#" }
+    ],
+    teamTip: "Creamos todas nuestras ilustraciones conceptuales con esta herramienta. Ahorra horas de diseño."
   },
   {
     id: 5,
@@ -63,6 +122,20 @@ const toolsData = [
     useCase: ["Gestionar datos", "Trabajar en equipo"],
     recommended: false,
     logo: "https://upload.wikimedia.org/wikipedia/commons/4/4b/Airtable_Logo.svg",
+    fullDescription: "Airtable combina la simplicidad de una hoja de cálculo con la potencia de una base de datos. Perfecta para organizar y visualizar información de forma flexible y colaborativa.",
+    tasks: [
+      "Gestionar inventarios y catálogos",
+      "Seguimiento de proyectos y tareas",
+      "Organizar eventos y calendarios",
+      "Centralizar información de clientes"
+    ],
+    resources: [
+      { type: "youtube", title: "Airtable desde cero: Tutorial completo", url: "#" },
+      { type: "blog", title: "Cómo reemplazar Excel con Airtable", url: "#" },
+      { type: "podcast", title: "Bases de datos sin ser desarrollador", url: "#" },
+      { type: "course", title: "Airtable para negocios: Curso introductorio", url: "#" }
+    ],
+    teamTip: "Usamos Airtable para mantener nuestro CRM interno y gestionar el seguimiento de clientes de forma visual."
   },
   {
     id: 6,
@@ -74,6 +147,20 @@ const toolsData = [
     useCase: ["Automatizar procesos", "Integrar servicios"],
     recommended: false,
     logo: "https://images.g2crowd.com/uploads/product/image/social_landscape/social_landscape_8a3fcce3962b963c0cf2d9d8cfcb1083/make.png",
+    fullDescription: "Make (anteriormente Integromat) permite crear automatizaciones complejas con una interfaz visual. Más potente que Zapier para flujos de trabajo avanzados con transformaciones de datos.",
+    tasks: [
+      "Crear integraciones personalizadas entre sistemas",
+      "Automatizar procesos de negocio complejos",
+      "Transformar y enriquecer datos entre plataformas",
+      "Construir webhooks y endpoints personalizados"
+    ],
+    resources: [
+      { type: "youtube", title: "Make vs Zapier: Cuándo usar cada uno", url: "#" },
+      { type: "blog", title: "5 automatizaciones avanzadas con Make", url: "#" },
+      { type: "podcast", title: "El poder de la automatización sin código", url: "#" },
+      { type: "course", title: "Make para desarrolladores ciudadanos", url: "#" }
+    ],
+    teamTip: "Cuando Zapier se queda corto, usamos Make para las automatizaciones más complejas que requieren manipulación de datos."
   },
   {
     id: 7,
@@ -85,6 +172,20 @@ const toolsData = [
     useCase: ["Diseño web", "Marketing"],
     recommended: true,
     logo: "https://upload.wikimedia.org/wikipedia/commons/9/92/Webflow_logo.svg",
+    fullDescription: "Webflow es una plataforma que combina diseño visual con la potencia del código HTML, CSS y JS. Permite crear sitios web profesionales sin programar, con total control de diseño.",
+    tasks: [
+      "Construir landing pages de alto rendimiento",
+      "Crear portfolios y sitios corporativos",
+      "Implementar blogs y CMS personalizados",
+      "Diseñar e-commerce sin limitaciones"
+    ],
+    resources: [
+      { type: "youtube", title: "Webflow University: Curso completo", url: "#" },
+      { type: "blog", title: "De diseñador a constructor web con Webflow", url: "#" },
+      { type: "podcast", title: "No-Code Revolution con Webflow", url: "#" },
+      { type: "course", title: "Masterclass gratuita: SEO en Webflow", url: "#" }
+    ],
+    teamTip: "Construimos todos nuestros sitios web en Webflow por su flexibilidad y facilidad para hacer cambios rápidos."
   },
   {
     id: 8,
@@ -96,6 +197,20 @@ const toolsData = [
     useCase: ["Diseño UI/UX", "Prototipado", "Trabajar en equipo"],
     recommended: true,
     logo: "https://upload.wikimedia.org/wikipedia/commons/3/33/Figma-logo.svg",
+    fullDescription: "Figma es una herramienta de diseño basada en la nube que facilita la colaboración en tiempo real. Perfecta para diseño UI/UX, prototipado, y sistemas de diseño compartidos.",
+    tasks: [
+      "Crear interfaces de usuario para web y mobile",
+      "Desarrollar sistemas de diseño escalables",
+      "Prototipar interacciones y flujos de usuario",
+      "Colaborar con equipos de producto en tiempo real"
+    ],
+    resources: [
+      { type: "youtube", title: "Figma para principiantes 2024", url: "#" },
+      { type: "blog", title: "Mejores prácticas para sistemas de diseño en Figma", url: "#" },
+      { type: "podcast", title: "El futuro del diseño colaborativo", url: "#" },
+      { type: "course", title: "Auto-layout y componentes en Figma: Curso gratuito", url: "#" }
+    ],
+    teamTip: "Todo nuestro proceso de diseño ocurre en Figma. La colaboración en tiempo real ha eliminado las reuniones de revisión."
   },
 ];
 
@@ -195,9 +310,25 @@ const ToolsRepository: React.FC = () => {
       }
     }),
     hover: { 
-      y: -10,
-      boxShadow: "0 10px 25px -5px rgba(156, 107, 255, 0.2)",
+      y: -8,
+      boxShadow: "0 8px 30px -5px rgba(156, 107, 255, 0.15)",
       transition: { duration: 0.3 }
+    }
+  };
+
+  // Resource icon mapping
+  const getResourceIcon = (type: string) => {
+    switch (type) {
+      case 'youtube':
+        return <Youtube className="w-4 h-4 text-red-400" />;
+      case 'blog':
+        return <BookOpen className="w-4 h-4 text-blue-400" />;
+      case 'podcast':
+        return <Podcast className="w-4 h-4 text-green-400" />;
+      case 'course':
+        return <BookOpen className="w-4 h-4 text-purple-400" />;
+      default:
+        return <ExternalLink className="w-4 h-4 text-irrelevant-light/70" />;
     }
   };
 
@@ -369,58 +500,71 @@ const ToolsRepository: React.FC = () => {
                 variants={cardVariants}
                 whileHover="hover"
                 layout
-                className="perspective"
+                onClick={() => handleOpenDetails(tool)}
+                className="cursor-pointer rounded-2xl overflow-hidden"
               >
-                <div className="gradient-border rounded-[20px] p-5 group relative overflow-hidden h-full flex flex-col">
+                <div className="gradient-border rounded-[20px] p-5 group relative overflow-hidden h-full flex flex-col bg-white/5">
                   {/* Background gradient */}
                   <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-20 z-0"></div>
                   
-                  <div className="relative z-10 flex flex-col justify-between h-full">
-                    <div>
-                      <div className="flex items-center gap-4 mb-4">
-                        <div className="w-16 h-16 rounded-xl bg-white/10 p-2 flex items-center justify-center">
-                          <img
-                            src={tool.logo}
-                            alt={tool.name}
-                            className="w-12 h-12 object-contain"
-                          />
-                        </div>
-                        <div>
-                          <h3 className="font-bold text-xl text-irrelevant-light flex items-center gap-2">
-                            {tool.name}
-                            {tool.recommended && (
-                              <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-                            )}
-                          </h3>
-                          <p className="text-sm text-irrelevant-light/70 line-clamp-1">
-                            {tool.description}
-                          </p>
-                        </div>
+                  <div className="relative z-10 h-full flex flex-col">
+                    <div className="flex gap-4 mb-4">
+                      <div className="w-16 h-16 rounded-xl bg-white/10 p-2 flex items-center justify-center">
+                        <img
+                          src={tool.logo}
+                          alt={tool.name}
+                          className="w-full h-full object-contain"
+                        />
                       </div>
-                      
-                      <div className="flex flex-wrap gap-2 mt-4">
-                        <span className="px-2 py-1 rounded-full bg-white/5 text-xs text-irrelevant-light/80">
-                          {tool.category}
-                        </span>
-                        <span className="px-2 py-1 rounded-full bg-white/5 text-xs text-irrelevant-light/80">
-                          {tool.level}
-                        </span>
-                        <span className="px-2 py-1 rounded-full bg-white/5 text-xs text-irrelevant-light/80">
-                          {tool.price}
-                        </span>
+                      <div className="flex-1">
+                        <h3 className="font-bold text-xl text-irrelevant-light flex items-center gap-2">
+                          {tool.name}
+                          {tool.recommended && (
+                            <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
+                          )}
+                        </h3>
+                        <p className="text-sm text-irrelevant-light/70">
+                          {tool.description}
+                        </p>
                       </div>
                     </div>
                     
-                    <motion.button
-                      onClick={() => handleOpenDetails(tool)}
-                      className="mt-4 w-full py-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 
-                        transition-all duration-300 text-irrelevant-light font-medium text-sm flex items-center justify-center gap-2
-                        group-hover:bg-gradient-to-r group-hover:from-irrelevant-violet/80 group-hover:to-irrelevant-purple/80"
-                      whileHover={{ scale: 1.02 }}
-                    >
-                      <span>Espiar esta joya</span>
-                      <ArrowRight className="w-4 h-4" />
-                    </motion.button>
+                    <div className="flex flex-wrap gap-2 mb-3">
+                      <span className="px-2 py-1 rounded-full bg-white/5 text-xs text-irrelevant-light/80">
+                        {tool.category}
+                      </span>
+                      <span className="px-2 py-1 rounded-full bg-white/5 text-xs text-irrelevant-light/80">
+                        {tool.level}
+                      </span>
+                      <span className="px-2 py-1 rounded-full bg-white/5 text-xs text-irrelevant-light/80">
+                        {tool.price}
+                      </span>
+                    </div>
+
+                    <div className="flex flex-wrap gap-1.5 mt-auto">
+                      {tool.useCase.slice(0, 3).map((useCase, i) => (
+                        <div key={i} className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-white/5 text-xs">
+                          <Zap className="w-3 h-3 text-irrelevant-violet" />
+                          <span>{useCase}</span>
+                        </div>
+                      ))}
+                    </div>
+                    
+                    {/* Hover indicator */}
+                    <div className="absolute right-4 bottom-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <div className="w-8 h-8 rounded-full bg-irrelevant-violet/20 flex items-center justify-center">
+                              <Zap className="w-4 h-4 text-irrelevant-violet" />
+                            </div>
+                          </TooltipTrigger>
+                          <TooltipContent side="left">
+                            <p>Ver más detalles</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
                   </div>
                   
                   {/* Hover glow effect */}
@@ -432,22 +576,22 @@ const ToolsRepository: React.FC = () => {
         </div>
       </div>
 
-      {/* Tool Details Dialog */}
+      {/* Tool Details Dialog - Redesigned */}
       <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
-        <DialogContent className="bg-irrelevant-dark border border-white/10 text-irrelevant-light max-w-3xl">
+        <DialogContent className="bg-irrelevant-dark border border-white/10 text-irrelevant-light max-w-4xl">
           {selectedTool && (
             <>
               <DialogHeader>
                 <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 rounded-xl bg-white/10 p-2 flex items-center justify-center">
+                  <div className="w-20 h-20 rounded-xl bg-white/10 p-2 flex items-center justify-center">
                     <img
                       src={selectedTool.logo}
                       alt={selectedTool.name}
-                      className="w-12 h-12 object-contain"
+                      className="w-16 h-16 object-contain"
                     />
                   </div>
                   <div>
-                    <DialogTitle className="text-2xl font-providence">
+                    <DialogTitle className="text-2xl font-providence flex items-center gap-2">
                       {selectedTool.name}
                       {selectedTool.recommended && (
                         <span className="ml-2">
@@ -462,8 +606,16 @@ const ToolsRepository: React.FC = () => {
                 </div>
               </DialogHeader>
               
-              <div className="mt-4">
-                <div className="flex flex-wrap gap-2 mb-4">
+              <div className="mt-6 space-y-6 overflow-y-auto max-h-[70vh] pr-2">
+                {/* Full description */}
+                <div>
+                  <p className="text-irrelevant-light/90 leading-relaxed">
+                    {selectedTool.fullDescription}
+                  </p>
+                </div>
+                
+                {/* Categories */}
+                <div className="flex flex-wrap gap-2 pt-2">
                   <span className="px-3 py-1.5 rounded-full bg-white/5 text-sm text-irrelevant-light/80">
                     {selectedTool.category}
                   </span>
@@ -475,8 +627,9 @@ const ToolsRepository: React.FC = () => {
                   </span>
                 </div>
                 
-                <div className="mb-6">
-                  <h4 className="text-lg font-medium mb-2">Casos de uso</h4>
+                {/* Use cases */}
+                <div className="pt-2">
+                  <h4 className="text-xl font-providence mb-3 text-gradient">Casos de uso</h4>
                   <div className="flex flex-wrap gap-2">
                     {selectedTool.useCase.map((useCase, i) => (
                       <div key={i} className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-white/5 text-sm">
@@ -486,13 +639,63 @@ const ToolsRepository: React.FC = () => {
                     ))}
                   </div>
                 </div>
-                
-                <div className="mt-8 flex justify-end">
+
+                {/* Tasks */}
+                <div className="pt-2">
+                  <h4 className="text-xl font-providence mb-3 text-gradient">Lo que puedes hacer con {selectedTool.name}</h4>
+                  <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                    {selectedTool.tasks.map((task, i) => (
+                      <li key={i} className="flex items-center gap-2 text-irrelevant-light/80">
+                        <div className="w-5 h-5 rounded-full bg-irrelevant-violet/20 flex items-center justify-center shrink-0">
+                          <Zap className="w-3 h-3 text-irrelevant-violet" />
+                        </div>
+                        <span>{task}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Resources */}
+                <div className="pt-2">
+                  <h4 className="text-xl font-providence mb-3 text-gradient">Aprende a sacarle el jugo</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {selectedTool.resources.map((resource, i) => (
+                      <a 
+                        key={i} 
+                        href={resource.url}
+                        className="flex items-center gap-3 p-3 bg-white/5 rounded-lg hover:bg-white/10 transition-colors"
+                      >
+                        <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+                          {getResourceIcon(resource.type)}
+                        </div>
+                        <span className="text-sm">{resource.title}</span>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Team tip */}
+                <div className="pt-2">
+                  <div className="bg-irrelevant-violet/10 border border-irrelevant-violet/20 rounded-lg p-4">
+                    <div className="flex items-start gap-3">
+                      <div className="w-10 h-10 rounded-full bg-irrelevant-violet/20 flex items-center justify-center shrink-0 mt-0.5">
+                        <Lightbulb className="w-5 h-5 text-irrelevant-violet" />
+                      </div>
+                      <div>
+                        <h5 className="font-medium text-irrelevant-light mb-1">Tip del equipo irrelevant</h5>
+                        <p className="text-irrelevant-light/80 text-sm">{selectedTool.teamTip}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Action button */}
+                <div className="pt-4 flex justify-center">
                   <Button 
-                    onClick={() => setIsDetailsOpen(false)}
-                    className="bg-gradient-to-r from-irrelevant-violet to-irrelevant-purple text-white px-6"
+                    className="bg-gradient-to-r from-irrelevant-violet to-irrelevant-purple text-white px-8 py-6 h-auto text-base font-medium"
                   >
-                    Volver al arsenal
+                    <span>Ir a la herramienta</span>
+                    <ExternalLink className="w-5 h-5 ml-2" />
                   </Button>
                 </div>
               </div>
