@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, Zap, Rocket, Sparkles, Workflow, X, Filter, Play, Link2, Copy, ChevronLeft, ArrowUpRight } from "lucide-react";
+import { ArrowRight, Zap, Rocket, Sparkles, Workflow, X, Filter, Play, Link2, Copy, ChevronLeft, ArrowUpRight, ExternalLink } from "lucide-react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -30,7 +30,11 @@ const useCases = [
     ],
     results: "Reducción del 70% en tiempo de gestión de leads y aumento del 35% en tasa de conversión.",
     color: "blue",
-    glow: "shadow-blue-500/20"
+    glow: "shadow-blue-500/20",
+    image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=1470&auto=format&fit=crop",
+    imageAlt: "Persona trabajando con laptop mientras el sistema responde automáticamente",
+    problem: "Pasar horas respondiendo consultas básicas y coordinando agendas con clientes potenciales",
+    testimonial: "Con este flujo automatizado, podemos generar el doble de propuestas con la mitad del equipo comercial."
   },
   {
     id: 2,
@@ -53,7 +57,11 @@ const useCases = [
     ],
     results: "Aumento del 300% en producción de contenido y 45% más engagement con el mismo equipo.",
     color: "orange",
-    glow: "shadow-orange-500/20"
+    glow: "shadow-orange-500/20",
+    image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1744&auto=format&fit=crop",
+    imageAlt: "Espacio de trabajo creativo con múltiples pantallas mostrando diseños",
+    problem: "Depender de un equipo creativo costoso y lento para generar contenido para redes",
+    testimonial: "Pasamos de publicar 2 veces por semana a tener contenido diario en 3 plataformas diferentes, sin contratar a nadie más."
   },
   {
     id: 3,
@@ -76,7 +84,11 @@ const useCases = [
     ],
     results: "Reducción del 90% en tiempo de análisis y 40% mejor ROI en decisiones de inversión.",
     color: "green",
-    glow: "shadow-green-500/20"
+    glow: "shadow-green-500/20",
+    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1470&auto=format&fit=crop",
+    imageAlt: "Dashboard analítico con visualizaciones de datos",
+    problem: "Tener datos dispersos en múltiples sistemas sin capacidad de análisis unificado",
+    testimonial: "Ahora tomamos decisiones de inversión basadas en datos reales, no en intuiciones o reportes obsoletos."
   },
   {
     id: 4,
@@ -99,7 +111,11 @@ const useCases = [
     ],
     results: "Ahorro de $10k+ en costos de diseño y desarrollo, y reducción del time-to-market de meses a días.",
     color: "pink",
-    glow: "shadow-pink-500/20"
+    glow: "shadow-pink-500/20",
+    image: "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?q=80&w=1470&auto=format&fit=crop",
+    imageAlt: "Interfaz de diseño web con elementos visuales coloridos",
+    problem: "Depender de equipos de desarrollo costosos para crear y mantener sitios web profesionales",
+    testimonial: "Lanzamos 4 sitios web para diferentes productos en el tiempo que antes nos tomaba crear uno solo."
   },
 ];
 
@@ -174,7 +190,7 @@ const UseCaseDetail = ({
         </p>
       </motion.div>
       
-      {/* Objetivo y Resultado */}
+      {/* Problema y Objetivo */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -184,22 +200,22 @@ const UseCaseDetail = ({
         <Card className={`glass-panel border-${useCase.color}-500/30 ${useCase.glow}`}>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <span className="text-lg">🎯 Objetivo</span>
+              <span className="text-lg">⚡ Problema</span>
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-irrelevant-light/90 text-lg font-medium">{useCase.objective}</p>
+            <p className="text-irrelevant-light/90">{useCase.problem}</p>
           </CardContent>
         </Card>
         
         <Card className={`glass-panel border-${useCase.color}-500/30 ${useCase.glow}`}>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <span className="text-lg">📊 Resultado</span>
+              <span className="text-lg">🎯 Objetivo</span>
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-irrelevant-light/90">{useCase.results}</p>
+            <p className="text-irrelevant-light/90 text-lg font-medium">{useCase.objective}</p>
           </CardContent>
         </Card>
       </motion.div>
@@ -272,6 +288,24 @@ const UseCaseDetail = ({
         </div>
       </motion.div>
       
+      {/* Testimonio */}
+      {useCase.testimonial && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.55 }}
+          className={`glass-panel rounded-xl p-8 border-l-4 border-${useCase.color}-500/50`}
+        >
+          <div className="flex items-start gap-4">
+            <div className="text-4xl">💬</div>
+            <div>
+              <p className="text-irrelevant-light/90 text-lg italic">"{useCase.testimonial}"</p>
+              <p className="text-irrelevant-light/60 mt-2 text-sm">— Usuario de irrelevant</p>
+            </div>
+          </div>
+        </motion.div>
+      )}
+      
       {/* Video o Vista previa */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -281,11 +315,17 @@ const UseCaseDetail = ({
       >
         {useCase.hasVideo ? (
           <>
-            <div className="absolute inset-0 bg-gradient-to-br from-black/80 to-black/40 flex items-center justify-center">
-              <div className="w-20 h-20 rounded-full bg-irrelevant-violet/30 flex items-center justify-center backdrop-blur-sm cursor-pointer hover:scale-110 transition-transform duration-300">
+            <div className="absolute inset-0 bg-gradient-to-br from-black/80 to-black/40 flex items-center justify-center"
+                 style={{
+                   backgroundImage: `url(${useCase.image})`,
+                   backgroundSize: 'cover',
+                   backgroundPosition: 'center'
+                 }}>
+              <div className="absolute inset-0 bg-gradient-to-br from-black/70 to-black/30 flex items-center justify-center backdrop-blur-sm"></div>
+              <div className="w-20 h-20 rounded-full bg-irrelevant-violet/30 flex items-center justify-center backdrop-blur-sm cursor-pointer hover:scale-110 transition-transform duration-300 z-10">
                 <Play className="w-8 h-8 text-irrelevant-light ml-1" />
               </div>
-              <div className="absolute bottom-8 left-8">
+              <div className="absolute bottom-8 left-8 z-10">
                 <h3 className="text-2xl font-providence text-irrelevant-light mb-2">
                   Ver en acción
                 </h3>
@@ -536,9 +576,17 @@ const UseCases: React.FC = () => {
                           onClick={() => setSelectedCase(useCase.id)}
                           className={`h-full rounded-xl overflow-hidden relative gradient-border glass-panel cursor-pointer transition-all duration-300 group-hover:shadow-2xl ${useCase.glow}`}
                         >
-                          <div className={`absolute inset-0 bg-gradient-to-b ${useCase.gradient} opacity-70 transition-opacity duration-300 group-hover:opacity-90`}></div>
+                          <div 
+                            className={`absolute inset-0 bg-gradient-to-b ${useCase.gradient} opacity-70 transition-opacity duration-300 group-hover:opacity-90`}
+                            style={{
+                              backgroundImage: `url(${useCase.image})`,
+                              backgroundSize: 'cover',
+                              backgroundPosition: 'center'
+                            }}
+                          >
+                            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-irrelevant-dark/70 to-irrelevant-dark/90 mix-blend-multiply"></div>
+                          </div>
                           <div className="absolute inset-0 bg-[url('/noise.png')] opacity-10 mix-blend-overlay"></div>
-                          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-irrelevant-dark/90"></div>
                           
                           <div className="relative z-10 p-8 h-full flex flex-col justify-between">
                             <div>
@@ -560,7 +608,7 @@ const UseCases: React.FC = () => {
                               
                               <div className="flex items-center gap-3 mb-4">
                                 <motion.div 
-                                  className="w-14 h-14 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center"
+                                  className={`w-14 h-14 rounded-full bg-${useCase.color}-500/20 backdrop-blur-md flex items-center justify-center`}
                                   whileHover={{ 
                                     rotate: [0, -10, 10, -5, 0],
                                     scale: 1.05,
