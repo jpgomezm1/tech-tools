@@ -5,9 +5,9 @@ import HeroSection from "@/components/HeroSection";
 import RegistrationModal from "@/components/RegistrationModal";
 import ToolsRepository from "@/components/ToolsRepository";
 import CuratedCollections from "@/components/CuratedCollections";
-import Newsletter from "@/components/Newsletter";
 import UseCases from "@/components/UseCases";
-import Community from "@/components/Community";
+import CommunityNewsletter from "@/components/CommunityNewsletter";
+import Footer from "@/components/Footer";
 
 const Index = () => {
   const [showModal, setShowModal] = useState(false);
@@ -43,10 +43,8 @@ const Index = () => {
             <ToolsRepository />
             <CuratedCollections />
             <UseCases />
-            <div className="space-y-0">
-              <Newsletter />
-              <Community />
-            </div>
+            <CommunityNewsletter />
+            <Footer />
           </motion.div>
         )}
       </AnimatePresence>
