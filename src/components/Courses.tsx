@@ -13,6 +13,7 @@ import {
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogClose } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const courses = [
   {
@@ -44,12 +45,21 @@ const courses = [
   },
 ];
 
+// Lista de países para el selector
+const countries = [
+  "Argentina", "Bolivia", "Brasil", "Chile", "Colombia", "Costa Rica", 
+  "Cuba", "Ecuador", "El Salvador", "España", "Guatemala", "Honduras", 
+  "México", "Nicaragua", "Panamá", "Paraguay", "Perú", "Puerto Rico", 
+  "República Dominicana", "Uruguay", "Venezuela", "Otro"
+];
+
 const Courses: React.FC = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState<typeof courses[0] | null>(null);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    country: "",
     question: "",
   });
   const [submitted, setSubmitted] = useState(false);
@@ -62,6 +72,10 @@ const Courses: React.FC = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSelectChange = (name: string, value: string) => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
@@ -198,6 +212,31 @@ const Courses: React.FC = () => {
                   className="bg-white/5 border border-white/10 text-irrelevant-light"
                   placeholder="tu@email.com"
                 />
+              </div>
+              
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-irrelevant-light">
+                  País
+                </label>
+                <Select
+                  value={formData.country}
+                  onValueChange={(value) => handleSelectChange("country", value)}
+                >
+                  <SelectTrigger className="bg-white/5 border border-white/10 text-irrelevant-light h-auto">
+                    <SelectValue placeholder="Selecciona tu país" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-irrelevant-dark border-white/10 text-irrelevant-light max-h-60">
+                    {countries.map((country) => (
+                      <SelectItem 
+                        key={country} 
+                        value={country}
+                        className="hover:bg-white/10 focus:bg-white/10 cursor-pointer"
+                      >
+                        {country}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
               
               <div className="space-y-2">

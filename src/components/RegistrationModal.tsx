@@ -1,13 +1,22 @@
 
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Check, Lock, User, Mail, Building, Briefcase, ArrowRight, Key } from "lucide-react";
+import { X, Check, Lock, User, Mail, Building, Briefcase, ArrowRight, Key, MapPin } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface RegistrationModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: () => void;
 }
+
+// Lista de países para el selector
+const countries = [
+  "Argentina", "Bolivia", "Brasil", "Chile", "Colombia", "Costa Rica", 
+  "Cuba", "Ecuador", "El Salvador", "España", "Guatemala", "Honduras", 
+  "México", "Nicaragua", "Panamá", "Paraguay", "Perú", "Puerto Rico", 
+  "República Dominicana", "Uruguay", "Venezuela", "Otro"
+];
 
 const RegistrationModal: React.FC<RegistrationModalProps> = ({
   isOpen,
@@ -17,6 +26,7 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    country: "",
     userType: "",
     company: "",
     automationNeeds: "",
@@ -24,7 +34,6 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
     interestArea: "",
     toolsUsed: "",
     projectDescription: "",
-    interests: [] as string[],
     secretPhrase: "",
   });
 
@@ -54,15 +63,8 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleInterestChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value, checked } = e.target;
-    
-    setFormData((prev) => ({
-      ...prev,
-      interests: checked
-        ? [...prev.interests, value]
-        : prev.interests.filter((interest) => interest !== value),
-    }));
+  const handleSelectChange = (name: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleNextStep = () => {
@@ -95,9 +97,9 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
   };
 
   const getMaxSteps = () => {
-    if (showCompanyFields) return 3;
-    if (showPersonFields) return 3;
-    return 2;
+    if (showCompanyFields) return 2;
+    if (showPersonFields) return 2;
+    return 1;
   };
 
   const modalVariants = {
@@ -265,25 +267,78 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
                               </div>
                             </div>
 
+                            <div className="relative">
+                              <label className="block text-sm font-medium mb-1 text-irrelevant-light">
+                                País
+                              </label>
+                              <div className="relative">
+                                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-irrelevant-light/50 z-10">
+                                  <MapPin className="w-5 h-5" />
+                                </div>
+                                <Select
+                                  value={formData.country}
+                                  onValueChange={(value) => handleSelectChange("country", value)}
+                                >
+                                  <SelectTrigger 
+                                    className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-irrelevant-violet/50 text-irrelevant-light h-auto"
+                                  >
+                                    <SelectValue placeholder="Selecciona tu país" />
+                                  </SelectTrigger>
+                                  <SelectContent className="bg-irrelevant-dark border-white/10 text-irrelevant-light max-h-80">
+                                    {countries.map((country) => (
+                                      <SelectItem 
+                                        key={country} 
+                                        value={country}
+                                        className="hover:bg-white/10 focus:bg-white/10 cursor-pointer"
+                                      >
+                                        {country}
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                              </div>
+                            </div>
+
                             <div>
                               <label className="block text-sm font-medium mb-1 text-irrelevant-light">
                                 ¿Cuál de estos te describe mejor?
                               </label>
-                              <select
-                                name="userType"
-                                required
+                              <Select
                                 value={formData.userType}
-                                onChange={handleChange}
-                                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-irrelevant-violet/50 text-irrelevant-light appearance-none"
+                                onValueChange={(value) => handleSelectChange("userType", value)}
                               >
-                                <option value="" disabled>
-                                  Selecciona una opción
-                                </option>
-                                <option value="Emprendedor">Emprendedor con negocio propio</option>
-                                <option value="Freelancer">Profesional independiente / freelancer</option>
-                                <option value="Persona">Persona interesada en aprender y explorar</option>
-                                <option value="Empresa">Empresa</option>
-                              </select>
+                                <SelectTrigger 
+                                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-irrelevant-violet/50 text-irrelevant-light h-auto"
+                                >
+                                  <SelectValue placeholder="Selecciona una opción" />
+                                </SelectTrigger>
+                                <SelectContent className="bg-irrelevant-dark border-white/10 text-irrelevant-light">
+                                  <SelectItem 
+                                    value="Emprendedor"
+                                    className="hover:bg-white/10 focus:bg-white/10 cursor-pointer"
+                                  >
+                                    Emprendedor con negocio propio
+                                  </SelectItem>
+                                  <SelectItem 
+                                    value="Freelancer"
+                                    className="hover:bg-white/10 focus:bg-white/10 cursor-pointer"
+                                  >
+                                    Profesional independiente / freelancer
+                                  </SelectItem>
+                                  <SelectItem 
+                                    value="Persona"
+                                    className="hover:bg-white/10 focus:bg-white/10 cursor-pointer"
+                                  >
+                                    Persona interesada en aprender y explorar
+                                  </SelectItem>
+                                  <SelectItem 
+                                    value="Empresa"
+                                    className="hover:bg-white/10 focus:bg-white/10 cursor-pointer"
+                                  >
+                                    Empresa
+                                  </SelectItem>
+                                </SelectContent>
+                              </Select>
                             </div>
 
                             <div className="relative group">
@@ -333,7 +388,7 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
                                 type="submit"
                                 className="flex items-center gap-2 bg-gradient-to-r from-irrelevant-violet to-irrelevant-purple text-white font-medium py-3 px-6 rounded-lg hover:shadow-lg hover:shadow-irrelevant-violet/20 transition-all duration-300"
                               >
-                                <span>Continuar</span>
+                                {formData.userType ? <span>Continuar</span> : <span>Acceder</span>}
                                 <ArrowRight className="w-5 h-5" />
                               </button>
                             </div>
@@ -413,7 +468,7 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
                                 type="submit"
                                 className="flex items-center gap-2 bg-gradient-to-r from-irrelevant-violet to-irrelevant-purple text-white font-medium py-3 px-6 rounded-lg hover:shadow-lg hover:shadow-irrelevant-violet/20 transition-all duration-300"
                               >
-                                <span>Siguiente</span>
+                                <span>Acceder</span>
                                 <ArrowRight className="w-5 h-5" />
                               </button>
                             </div>
@@ -493,74 +548,7 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
                                 type="submit"
                                 className="flex items-center gap-2 bg-gradient-to-r from-irrelevant-violet to-irrelevant-purple text-white font-medium py-3 px-6 rounded-lg hover:shadow-lg hover:shadow-irrelevant-violet/20 transition-all duration-300"
                               >
-                                <span>Siguiente</span>
-                                <ArrowRight className="w-5 h-5" />
-                              </button>
-                            </div>
-                          </motion.div>
-                        )}
-
-                        {formStep === 2 && (
-                          <motion.div
-                            key="step3"
-                            initial="hidden"
-                            animate="visible"
-                            exit="exit"
-                            variants={slideVariants}
-                            className="space-y-5"
-                          >
-                            <div>
-                              <p className="text-irrelevant-light/70 text-sm mb-6">Último paso antes de descubrir el arsenal</p>
-                            </div>
-
-                            <div>
-                              <label className="block text-sm font-medium mb-2 text-irrelevant-light">
-                                ¿Para qué te interesa este repositorio?
-                              </label>
-                              <div className="space-y-2">
-                                {[
-                                  "Mejorar mi productividad",
-                                  "Empezar un proyecto nuevo",
-                                  "Optimizar mi operación",
-                                  "Aprender sobre IA / Automatización",
-                                  "Encontrar alternativas a herramientas actuales",
-                                  "Escalar mi negocio actual",
-                                  "Otro",
-                                ].map((interest) => (
-                                  <div key={interest} className="flex items-center hover:bg-white/5 p-2 rounded-lg transition-colors">
-                                    <input
-                                      type="checkbox"
-                                      id={interest}
-                                      name="interests"
-                                      value={interest}
-                                      checked={formData.interests.includes(interest)}
-                                      onChange={handleInterestChange}
-                                      className="w-5 h-5 rounded border-white/30 text-irrelevant-violet focus:ring-irrelevant-violet/50 bg-white/5"
-                                    />
-                                    <label
-                                      htmlFor={interest}
-                                      className="ml-2 text-irrelevant-light"
-                                    >
-                                      {interest}
-                                    </label>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-
-                            <div className="flex justify-between pt-2">
-                              <button
-                                type="button"
-                                onClick={handlePrevStep}
-                                className="bg-white/5 hover:bg-white/10 text-irrelevant-light font-medium py-3 px-6 rounded-lg transition-all duration-300"
-                              >
-                                Atrás
-                              </button>
-                              <button
-                                type="submit"
-                                className="flex items-center gap-2 bg-gradient-to-r from-irrelevant-violet to-irrelevant-purple text-white font-medium py-3 px-6 rounded-lg hover:shadow-lg hover:shadow-irrelevant-violet/20 transition-all duration-300"
-                              >
-                                <span>Acceder al repositorio</span>
+                                <span>Acceder</span>
                                 <ArrowRight className="w-5 h-5" />
                               </button>
                             </div>
