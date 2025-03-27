@@ -178,7 +178,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onOpenModal, isUnlocked }) =>
         >
           <span className="inline-flex items-center py-1 px-3 rounded-full bg-white/10 backdrop-blur-sm text-sm font-medium text-irrelevant-light mb-4 gap-1">
             <Sparkles className="w-3.5 h-3.5 text-irrelevant-violet" />
-            Temporada 1: Superpoderes Tech
+            Arsenal Semanal de Herramientas Tech
           </span>
         </motion.div>
 
@@ -188,7 +188,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onOpenModal, isUnlocked }) =>
           transition={{ delay: 0.3, duration: 0.5 }}
           className="font-providence text-4xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6"
         >
-          <span className="text-gradient">Activa tus</span>{" "}
+          <span className="text-gradient">Entrena tus</span>{" "}
           <motion.span 
             className="text-irrelevant-violet inline-block"
             animate={{ 
@@ -202,7 +202,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onOpenModal, isUnlocked }) =>
               ease: "easeInOut"
             }}
           >
-            superpoderes
+            superpoderes tech
           </motion.span>
         </motion.h1>
 
@@ -212,7 +212,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onOpenModal, isUnlocked }) =>
           transition={{ delay: 0.4, duration: 0.5 }}
           className="text-lg md:text-xl lg:text-2xl mb-10 text-irrelevant-light/90 max-w-3xl mx-auto"
         >
-          Cada semana compartimos herramientas y técnicas que te darán ventajas extraordinarias en el mundo digital.
+          Accede al repositorio secreto de automatizaciones, herramientas y flujos que usamos para hacer más con menos esfuerzo cada semana.
         </motion.p>
 
         <motion.div
@@ -239,7 +239,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onOpenModal, isUnlocked }) =>
             } : {}}
           >
             <span className="relative z-10">
-              {isUnlocked ? "Descubre tus superpoderes" : "Únete a los superhéroes tech"}
+              {isUnlocked ? "Acceder al arsenal tech" : "Unirme al escuadrón tech"}
             </span>
             {isUnlocked ? (
               <Zap className="w-5 h-5 group-hover:rotate-12 transition-transform relative z-10" />
@@ -276,7 +276,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onOpenModal, isUnlocked }) =>
                 <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                 <polyline points="22 4 12 14.01 9 11.01"></polyline>
               </svg>
-              ¡Superpoderes activados!
+              ¡Kit de superpoderes activado!
             </motion.div>
           ) : (
             <motion.div
@@ -289,7 +289,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onOpenModal, isUnlocked }) =>
                 <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
                 <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
               </svg>
-              Acceso exclusivo para miembros
+              Reservado para héroes digitales
             </motion.div>
           )}
 

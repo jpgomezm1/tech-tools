@@ -48,8 +48,8 @@ const Index = () => {
     
     // Display success toast when user unlocks access
     toast({
-      title: "¡Súper Poderes Activados!",
-      description: "Bienvenido al escuadrón de héroes tech. ¡Tu arsenal digital está listo!",
+      title: "¡Kit de Superhéroe Activado!",
+      description: "Bienvenido al escuadrón. Tu arsenal de herramientas tech está listo para usar.",
       duration: 5000,
     });
   };
