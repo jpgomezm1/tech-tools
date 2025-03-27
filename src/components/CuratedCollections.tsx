@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, ArrowLeft, Lock, Star, Zap, Rocket, Sparkles, ExternalLink, X } from "lucide-react";
@@ -178,55 +179,57 @@ const CollectionDetail = ({
         </p>
       </div>
       
-      <ScrollArea className="h-[400px] w-full overflow-y-auto pr-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {collection.tools.map((tool, index) => (
-            <motion.div
-              key={`${collection.id}-tool-${index}`}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.1 + (index * 0.1) }}
-              className="glass-panel rounded-xl overflow-hidden relative"
-            >
-              <div className="p-6 space-y-4">
-                <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 rounded-lg bg-white/10 backdrop-blur-md flex items-center justify-center p-2">
-                    <img src={tool.logo} alt={tool.name} className="max-w-full max-h-full object-contain" />
+      <div className="relative">
+        <ScrollArea className="h-[400px] w-full">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pr-4">
+            {collection.tools.map((tool, index) => (
+              <motion.div
+                key={`${collection.id}-tool-${index}`}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.1 + (index * 0.1) }}
+                className="glass-panel rounded-xl overflow-hidden relative"
+              >
+                <div className="p-6 space-y-4">
+                  <div className="flex items-center gap-4">
+                    <div className="w-14 h-14 rounded-lg bg-white/10 backdrop-blur-md flex items-center justify-center p-2">
+                      <img src={tool.logo} alt={tool.name} className="max-w-full max-h-full object-contain" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-semibold text-irrelevant-light">{tool.name}</h3>
+                      <div className="flex gap-1 mt-1 flex-wrap">
+                        {tool.tags.map((tag, i) => (
+                          <span key={`tag-${i}`} className="text-xs px-2 py-0.5 rounded-full bg-irrelevant-violet/20 text-irrelevant-light/80">
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-xl font-semibold text-irrelevant-light">{tool.name}</h3>
-                    <div className="flex gap-1 mt-1 flex-wrap">
-                      {tool.tags.map((tag, i) => (
-                        <span key={`tag-${i}`} className="text-xs px-2 py-0.5 rounded-full bg-irrelevant-violet/20 text-irrelevant-light/80">
-                          {tag}
+                  <p className="text-irrelevant-light/80">{tool.description}</p>
+                  <div className="space-y-2">
+                    <div className="text-xs text-irrelevant-light/60 uppercase tracking-wide">Casos de uso principales</div>
+                    <div className="flex flex-wrap gap-2">
+                      {tool.useCases.map((useCase, i) => (
+                        <span key={`use-${i}`} className="text-xs px-2 py-1 rounded bg-white/5 border border-white/10 text-irrelevant-light/70">
+                          {useCase}
                         </span>
                       ))}
                     </div>
                   </div>
+                  <Button 
+                    variant="ghost" 
+                    className="w-full mt-2 text-center py-2 px-4 bg-irrelevant-violet/10 hover:bg-irrelevant-violet/20 rounded-lg text-irrelevant-light/90 transition-colors text-sm flex items-center justify-center gap-1"
+                  >
+                    <span>Ver cómo la usamos</span>
+                    <ExternalLink className="w-4 h-4" />
+                  </Button>
                 </div>
-                <p className="text-irrelevant-light/80">{tool.description}</p>
-                <div className="space-y-2">
-                  <div className="text-xs text-irrelevant-light/60 uppercase tracking-wide">Casos de uso principales</div>
-                  <div className="flex flex-wrap gap-2">
-                    {tool.useCases.map((useCase, i) => (
-                      <span key={`use-${i}`} className="text-xs px-2 py-1 rounded bg-white/5 border border-white/10 text-irrelevant-light/70">
-                        {useCase}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-                <Button 
-                  variant="ghost" 
-                  className="w-full mt-2 text-center py-2 px-4 bg-irrelevant-violet/10 hover:bg-irrelevant-violet/20 rounded-lg text-irrelevant-light/90 transition-colors text-sm flex items-center justify-center gap-1"
-                >
-                  <span>Ver cómo la usamos</span>
-                  <ExternalLink className="w-4 h-4" />
-                </Button>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </ScrollArea>
+              </motion.div>
+            ))}
+          </div>
+        </ScrollArea>
+      </div>
       
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -419,8 +422,8 @@ const CuratedCollections: React.FC = () => {
         </div>
         
         <Dialog open={selectedCollection !== null} onOpenChange={(open) => !open && setSelectedCollection(null)}>
-          <DialogContent className="bg-irrelevant-dark border border-white/10 text-irrelevant-light w-[95vw] max-w-5xl max-h-[90vh] overflow-hidden">
-            <DialogHeader className="flex flex-row items-center justify-between">
+          <DialogContent className="bg-irrelevant-dark border border-white/10 text-irrelevant-light w-[95vw] max-w-5xl">
+            <DialogHeader className="flex flex-row items-center justify-between sticky top-0 z-10 bg-irrelevant-dark py-2">
               <Button 
                 variant="ghost" 
                 size="sm"
