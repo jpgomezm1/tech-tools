@@ -1,8 +1,8 @@
-
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Check, Lock, User, Mail, Building, Briefcase, ArrowRight, Key, MapPin } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { registerUser, verifySecretPhrase } from '../services/api';
 
 interface RegistrationModalProps {
   isOpen: boolean;
@@ -42,6 +42,8 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
   const [showPersonFields, setShowPersonFields] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [secretMode, setSecretMode] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formError, setFormError] = useState("");
 
   useEffect(() => {
     if (formData.userType === "Empresa") {
@@ -61,10 +63,20 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    
+    // Limpiar mensaje de error cuando el usuario comienza a escribir
+    if (formError) {
+      setFormError("");
+    }
   };
 
   const handleSelectChange = (name: string, value: string) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
+    
+    // Limpiar mensaje de error cuando el usuario selecciona algo
+    if (formError) {
+      setFormError("");
+    }
   };
 
   const handleNextStep = () => {
@@ -75,31 +87,91 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
     setFormStep(prev => prev - 1);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const getMaxSteps = () => {
+    if (showCompanyFields) return 2;
+    if (showPersonFields) return 2;
+    return 1;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setFormError("");
     
-    // Check if secret phrase is correct to skip registration
-    if (formData.secretPhrase && formData.secretPhrase.toLowerCase() === "soy irrelevant club") {
-      onSubmit();
+    // Si el usuario ingresó la frase secreta, intenta validarla
+    if (formData.secretPhrase) {
+      setIsSubmitting(true);
+      
+      try {
+        const result = await verifySecretPhrase(formData.secretPhrase);
+        
+        if (result.success) {
+          // La frase es correcta, procede con el acceso
+          setIsSubmitting(false);
+          onSubmit();
+          return;
+        } else {
+          // Mostrar error de frase incorrecta
+          setFormError("Frase secreta incorrecta. Por favor intenta de nuevo.");
+          setIsSubmitting(false);
+        }
+      } catch (error) {
+        console.error("Error al verificar frase secreta:", error);
+        setFormError("Error de conexión. Por favor intenta de nuevo más tarde.");
+        setIsSubmitting(false);
+      }
       return;
     }
     
+    // Si estamos en un paso intermedio del formulario, avanzar al siguiente
     if (formStep < getMaxSteps() - 1) {
       handleNextStep();
       return;
     }
     
-    // Simulate form submission
-    setFormSubmitted(true);
-    setTimeout(() => {
-      onSubmit();
-    }, 1500);
-  };
-
-  const getMaxSteps = () => {
-    if (showCompanyFields) return 2;
-    if (showPersonFields) return 2;
-    return 1;
+    // Preparar los datos del usuario para el registro
+    const userData = {
+      name: formData.name,
+      email: formData.email,
+      country: formData.country,
+      userType: formData.userType,
+      // Agregar campos condicionales según el tipo de usuario
+      ...(formData.userType === 'Empresa' && {
+        company: formData.company,
+        automationNeeds: formData.automationNeeds,
+        linkedinUrl: formData.linkedinUrl || undefined
+      }),
+      ...((['Emprendedor', 'Freelancer', 'Persona'].includes(formData.userType)) && {
+        interestArea: formData.interestArea,
+        toolsUsed: formData.toolsUsed,
+        projectDescription: formData.projectDescription,
+        linkedinUrl: formData.linkedinUrl || undefined
+      })
+    };
+    
+    setIsSubmitting(true);
+    
+    try {
+      const result = await registerUser(userData);
+      
+      if (result.success) {
+        // Registro exitoso, mostrar animación de éxito
+        setFormSubmitted(true);
+        
+        // Dar tiempo a que se muestre la animación y luego completar el proceso
+        setTimeout(() => {
+          setIsSubmitting(false);
+          onSubmit();
+        }, 1500);
+      } else {
+        // Mostrar error de registro
+        setFormError(result.error || "Error al registrar usuario. Por favor intenta de nuevo.");
+        setIsSubmitting(false);
+      }
+    } catch (error) {
+      console.error("Error durante el registro:", error);
+      setFormError("Error de conexión. Por favor intenta de nuevo más tarde.");
+      setIsSubmitting(false);
+    }
   };
 
   const modalVariants = {
@@ -128,6 +200,7 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
   const toggleSecretMode = () => {
     setSecretMode(!secretMode);
   };
+
 
   return (
     <AnimatePresence>
