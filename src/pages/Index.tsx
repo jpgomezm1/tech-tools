@@ -48,8 +48,8 @@ const Index = () => {
     
     // Display success toast when user unlocks access
     toast({
-      title: "¡Acceso desbloqueado!",
-      description: "Ya eres parte del arsenal. Explora y disfruta.",
+      title: "¡Súper Poderes Activados!",
+      description: "Ahora eres parte del equipo de superhéroes tech. ¡A explorar!",
       duration: 5000,
     });
   };
@@ -68,7 +68,7 @@ const Index = () => {
           }}
         >
           <div className="text-irrelevant-light/70 text-sm font-medium mb-2">
-            Aún no tienes acceso completo
+            Aún no has desbloqueado tus poderes
           </div>
           <motion.div 
             className="px-4 py-2 rounded-full bg-irrelevant-violet/20 backdrop-blur-sm border border-irrelevant-violet/30 inline-flex items-center gap-2"

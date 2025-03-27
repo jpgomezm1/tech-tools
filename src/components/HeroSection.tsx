@@ -116,6 +116,59 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onOpenModal, isUnlocked }) =>
         </div>
       </div>
 
+      {/* Superhero character */}
+      <motion.div 
+        className="absolute right-0 bottom-0 z-10 h-60 sm:h-80 md:h-96 lg:h-[500px] opacity-20 sm:opacity-30"
+        initial={{ x: 100, opacity: 0 }}
+        animate={{ x: 0, opacity: isUnlocked ? 0.5 : 0.3 }}
+        transition={{ delay: 0.5, duration: 0.8, ease: "easeOut" }}
+      >
+        <img 
+          src="/lovable-uploads/50c5d86d-0f30-4447-8bc1-103e266384cc.png" 
+          alt="Tech Superhero" 
+          className="h-full object-contain"
+        />
+      </motion.div>
+
+      {/* Small floating superheros for decoration */}
+      <motion.div 
+        className="absolute left-10 bottom-32 z-5 h-16 md:h-20"
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ 
+          y: [0, -15, 0],
+          opacity: isUnlocked ? 0.6 : 0.2,
+        }}
+        transition={{ 
+          y: { repeat: Infinity, duration: 4, ease: "easeInOut" },
+          opacity: { duration: 1, delay: 0.8 }
+        }}
+      >
+        <img 
+          src="/lovable-uploads/50c5d86d-0f30-4447-8bc1-103e266384cc.png" 
+          alt="Mini Hero" 
+          className="h-full object-contain transform -scale-x-100 rotate-12"
+        />
+      </motion.div>
+
+      <motion.div 
+        className="absolute left-1/4 top-1/4 z-5 h-10 md:h-14"
+        initial={{ y: -20, opacity: 0 }}
+        animate={{ 
+          y: [0, 10, 0],
+          opacity: isUnlocked ? 0.5 : 0.15,
+        }}
+        transition={{ 
+          y: { repeat: Infinity, duration: 3, ease: "easeInOut" },
+          opacity: { duration: 1, delay: 1.2 }
+        }}
+      >
+        <img 
+          src="/lovable-uploads/50c5d86d-0f30-4447-8bc1-103e266384cc.png" 
+          alt="Mini Hero" 
+          className="h-full object-contain transform rotate-[-15deg]"
+        />
+      </motion.div>
+
       <div className="text-center max-w-5xl mx-auto z-10 relative flex flex-col items-center">
         <motion.div
           initial={{ y: 20, opacity: 0 }}
@@ -125,7 +178,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onOpenModal, isUnlocked }) =>
         >
           <span className="inline-flex items-center py-1 px-3 rounded-full bg-white/10 backdrop-blur-sm text-sm font-medium text-irrelevant-light mb-4 gap-1">
             <Sparkles className="w-3.5 h-3.5 text-irrelevant-violet" />
-            Armas Secretas de *irrelevant*
+            Los Súper Poderes de *irrelevant*
           </span>
         </motion.div>
 
@@ -135,7 +188,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onOpenModal, isUnlocked }) =>
           transition={{ delay: 0.3, duration: 0.5 }}
           className="font-providence text-4xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6"
         >
-          <span className="text-gradient">Nuestro arsenal</span>{" "}
+          <span className="text-gradient">Conviértete en</span>{" "}
           <motion.span 
             className="text-irrelevant-violet inline-block"
             animate={{ 
@@ -149,7 +202,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onOpenModal, isUnlocked }) =>
               ease: "easeInOut"
             }}
           >
-            secreto
+            superhéroe
           </motion.span>
         </motion.h1>
 
@@ -159,7 +212,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onOpenModal, isUnlocked }) =>
           transition={{ delay: 0.4, duration: 0.5 }}
           className="text-lg md:text-xl lg:text-2xl mb-10 text-irrelevant-light/90 max-w-3xl mx-auto"
         >
-          Hay herramientas que te cambian la vida. Nosotros las usamos. Ahora tú también puedes.
+          Hay tecnologías que te dan súper poderes. Nosotros las dominamos. Ahora es tu turno.
         </motion.p>
 
         <motion.div
@@ -186,7 +239,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onOpenModal, isUnlocked }) =>
             } : {}}
           >
             <span className="relative z-10">
-              {isUnlocked ? "Explorar el arsenal" : "Acceder al arsenal"}
+              {isUnlocked ? "Explora tus poderes" : "Desbloquea tus poderes"}
             </span>
             {isUnlocked ? (
               <Zap className="w-5 h-5 group-hover:rotate-12 transition-transform relative z-10" />
@@ -223,7 +276,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onOpenModal, isUnlocked }) =>
                 <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                 <polyline points="22 4 12 14.01 9 11.01"></polyline>
               </svg>
-              Ya eres parte del arsenal
+              ¡Poderes desbloqueados con éxito!
             </motion.div>
           ) : (
             <motion.div
@@ -236,7 +289,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onOpenModal, isUnlocked }) =>
                 <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
                 <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
               </svg>
-              Necesitas la llave para continuar
+              Necesitas la clave para activar tus poderes
             </motion.div>
           )}
 
@@ -265,6 +318,30 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onOpenModal, isUnlocked }) =>
           transition={{ duration: 3, repeat: Infinity }}
         >
           <div className="h-full bg-gradient-to-t from-irrelevant-dark to-transparent" />
+        </motion.div>
+      )}
+
+      {/* Cape effect when unlocked */}
+      {isUnlocked && (
+        <motion.div
+          className="absolute inset-0 pointer-events-none z-5"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 0.5 }}
+        >
+          <div className="absolute top-0 left-0 w-full h-20 bg-gradient-to-b from-irrelevant-violet/10 to-transparent" />
+          <motion.div 
+            className="absolute bottom-0 left-0 w-full h-40 bg-gradient-to-t from-irrelevant-violet/5 to-transparent"
+            animate={{ 
+              opacity: [0.5, 0.8, 0.5],
+              height: ["40px", "60px", "40px"]
+            }}
+            transition={{ 
+              duration: 4, 
+              repeat: Infinity, 
+              repeatType: "reverse" 
+            }}
+          />
         </motion.div>
       )}
     </motion.section>
