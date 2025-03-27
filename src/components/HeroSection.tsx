@@ -24,9 +24,9 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onOpenModal, isUnlocked }) =>
         className="absolute top-8 left-8 z-20"
       >
         <img 
-          src="https://storage.googleapis.com/cluvi/logo_final.png" 
+          src="https://storage.googleapis.com/cluvi/nuevo_irre-removebg-preview.png" 
           alt="Irrelevant Logo" 
-          className="h-10 md:h-12"
+          className="h-8 md:h-10"
         />
       </motion.div>
 
