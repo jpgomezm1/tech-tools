@@ -116,27 +116,27 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onOpenModal, isUnlocked }) =>
         </div>
       </div>
 
-      {/* Superhero character */}
+      {/* Superhero character - Improved positioning and visibility */}
       <motion.div 
-        className="absolute right-0 bottom-0 z-10 h-60 sm:h-80 md:h-96 lg:h-[500px] opacity-20 sm:opacity-30"
+        className="absolute right-0 bottom-0 z-10 h-60 sm:h-80 md:h-96 lg:h-[500px] xl:h-[600px] opacity-40 sm:opacity-50 md:opacity-60"
         initial={{ x: 100, opacity: 0 }}
-        animate={{ x: 0, opacity: isUnlocked ? 0.5 : 0.3 }}
+        animate={{ x: 0, opacity: isUnlocked ? 0.7 : 0.5 }}
         transition={{ delay: 0.5, duration: 0.8, ease: "easeOut" }}
       >
         <img 
           src="/lovable-uploads/50c5d86d-0f30-4447-8bc1-103e266384cc.png" 
           alt="Tech Superhero" 
-          className="h-full object-contain"
+          className="h-full object-contain drop-shadow-[0_0_15px_rgba(156,107,255,0.5)]"
         />
       </motion.div>
 
-      {/* Small floating superheros for decoration */}
+      {/* Floating mini heroes with improved visibility */}
       <motion.div 
-        className="absolute left-10 bottom-32 z-5 h-16 md:h-20"
+        className="absolute left-10 bottom-32 z-5 h-16 md:h-20 lg:h-24 hidden sm:block"
         initial={{ y: 20, opacity: 0 }}
         animate={{ 
           y: [0, -15, 0],
-          opacity: isUnlocked ? 0.6 : 0.2,
+          opacity: isUnlocked ? 0.8 : 0.3,
         }}
         transition={{ 
           y: { repeat: Infinity, duration: 4, ease: "easeInOut" },
@@ -146,16 +146,16 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onOpenModal, isUnlocked }) =>
         <img 
           src="/lovable-uploads/50c5d86d-0f30-4447-8bc1-103e266384cc.png" 
           alt="Mini Hero" 
-          className="h-full object-contain transform -scale-x-100 rotate-12"
+          className="h-full object-contain transform -scale-x-100 rotate-12 drop-shadow-[0_0_8px_rgba(156,107,255,0.6)]"
         />
       </motion.div>
 
       <motion.div 
-        className="absolute left-1/4 top-1/4 z-5 h-10 md:h-14"
+        className="absolute left-1/4 top-1/4 z-5 h-10 md:h-14 lg:h-16 hidden sm:block"
         initial={{ y: -20, opacity: 0 }}
         animate={{ 
           y: [0, 10, 0],
-          opacity: isUnlocked ? 0.5 : 0.15,
+          opacity: isUnlocked ? 0.7 : 0.25,
         }}
         transition={{ 
           y: { repeat: Infinity, duration: 3, ease: "easeInOut" },
@@ -165,7 +165,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onOpenModal, isUnlocked }) =>
         <img 
           src="/lovable-uploads/50c5d86d-0f30-4447-8bc1-103e266384cc.png" 
           alt="Mini Hero" 
-          className="h-full object-contain transform rotate-[-15deg]"
+          className="h-full object-contain transform rotate-[-15deg] drop-shadow-[0_0_8px_rgba(156,107,255,0.6)]"
         />
       </motion.div>
 
@@ -178,7 +178,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onOpenModal, isUnlocked }) =>
         >
           <span className="inline-flex items-center py-1 px-3 rounded-full bg-white/10 backdrop-blur-sm text-sm font-medium text-irrelevant-light mb-4 gap-1">
             <Sparkles className="w-3.5 h-3.5 text-irrelevant-violet" />
-            Los Súper Poderes de *irrelevant*
+            Temporada 1: Superpoderes Tech
           </span>
         </motion.div>
 
@@ -188,7 +188,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onOpenModal, isUnlocked }) =>
           transition={{ delay: 0.3, duration: 0.5 }}
           className="font-providence text-4xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6"
         >
-          <span className="text-gradient">Conviértete en</span>{" "}
+          <span className="text-gradient">Activa tus</span>{" "}
           <motion.span 
             className="text-irrelevant-violet inline-block"
             animate={{ 
@@ -202,7 +202,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onOpenModal, isUnlocked }) =>
               ease: "easeInOut"
             }}
           >
-            superhéroe
+            superpoderes
           </motion.span>
         </motion.h1>
 
@@ -212,7 +212,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onOpenModal, isUnlocked }) =>
           transition={{ delay: 0.4, duration: 0.5 }}
           className="text-lg md:text-xl lg:text-2xl mb-10 text-irrelevant-light/90 max-w-3xl mx-auto"
         >
-          Hay tecnologías que te dan súper poderes. Nosotros las dominamos. Ahora es tu turno.
+          Cada semana compartimos herramientas y técnicas que te darán ventajas extraordinarias en el mundo digital.
         </motion.p>
 
         <motion.div
@@ -239,7 +239,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onOpenModal, isUnlocked }) =>
             } : {}}
           >
             <span className="relative z-10">
-              {isUnlocked ? "Explora tus poderes" : "Desbloquea tus poderes"}
+              {isUnlocked ? "Descubre tus superpoderes" : "Únete a los superhéroes tech"}
             </span>
             {isUnlocked ? (
               <Zap className="w-5 h-5 group-hover:rotate-12 transition-transform relative z-10" />
@@ -276,7 +276,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onOpenModal, isUnlocked }) =>
                 <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                 <polyline points="22 4 12 14.01 9 11.01"></polyline>
               </svg>
-              ¡Poderes desbloqueados con éxito!
+              ¡Superpoderes activados!
             </motion.div>
           ) : (
             <motion.div
@@ -289,7 +289,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onOpenModal, isUnlocked }) =>
                 <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
                 <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
               </svg>
-              Necesitas la clave para activar tus poderes
+              Acceso exclusivo para miembros
             </motion.div>
           )}
 
