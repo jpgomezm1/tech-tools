@@ -9,6 +9,13 @@ import { Button } from "@/components/ui/button";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Badge } from "@/components/ui/badge";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 // Estructura de datos escalable para los casos de uso
 const useCases = [
@@ -413,10 +420,10 @@ const UseCases: React.FC = () => {
           className="mb-10"
         >
           <h2 className="text-3xl font-providence mb-4 text-gradient">
-            Flujos en acción
+            Máquinas de productividad automáticas
           </h2>
           <p className="text-irrelevant-light/80">
-            Casos reales que implementamos con estas herramientas para transformar negocios
+            Automatizaciones reales que eliminan horas de trabajo manual y multiplican resultados sin contratar a nadie
           </p>
         </motion.div>
         
@@ -530,120 +537,131 @@ const UseCases: React.FC = () => {
           )}
         </motion.div>
 
-        {/* Carrusel horizontal con scroll */}
-        <ScrollArea className="w-full overflow-auto pb-6">
-          <div className="flex space-x-6 px-1 min-w-full">
-            {filteredCases.map((useCase, index) => (
-              <motion.div
-                key={useCase.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                whileHover={{ y: -5 }}
-                className="group flex-none w-[340px] md:w-[380px]"
-                onClick={() => setSelectedCase(useCase.id)}
-              >
-                <div 
-                  className={`h-[420px] rounded-xl overflow-hidden relative gradient-border glass-panel cursor-pointer transition-all duration-300 group-hover:shadow-2xl ${useCase.glow}`}
-                >
-                  <div 
-                    className="absolute inset-0 bg-cover bg-center transition-opacity duration-300 group-hover:opacity-90"
-                    style={{
-                      backgroundImage: `url(${useCase.image})`,
-                    }}
+        {/* Carrusel horizontal mejorado con shadcn/ui carousel */}
+        {filteredCases.length > 0 ? (
+          <Carousel
+            opts={{
+              align: "start",
+              loop: false,
+            }}
+            className="w-full"
+          >
+            <CarouselContent className="-ml-4">
+              {filteredCases.map((useCase, index) => (
+                <CarouselItem key={useCase.id} className="pl-4 md:basis-1/2 lg:basis-1/3">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: index * 0.1 }}
+                    viewport={{ once: true }}
+                    whileHover={{ y: -5 }}
+                    className="group"
+                    onClick={() => setSelectedCase(useCase.id)}
                   >
-                    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-irrelevant-dark/70 to-irrelevant-dark/90 mix-blend-multiply"></div>
-                  </div>
-                  <div className="absolute inset-0 bg-[url('/noise.png')] opacity-10 mix-blend-overlay"></div>
-                  
-                  <div className="relative z-10 p-6 h-full flex flex-col justify-between">
-                    <div>
-                      <div className="flex flex-wrap gap-2 mb-4">
-                        {useCase.tags.map((tag, i) => (
-                          <motion.div 
-                            key={`tag-${i}`}
-                            className="inline-block px-3 py-1 rounded-full bg-white/10 backdrop-blur-sm text-xs text-irrelevant-light/90"
-                            initial={{ opacity: 0, scale: 0.8 }}
-                            whileInView={{ opacity: 1, scale: 1 }}
-                            transition={{ delay: 0.3 + (i * 0.1) }}
-                            viewport={{ once: true }}
-                          >
-                            {tag}
-                          </motion.div>
-                        ))}
-                      </div>
-                      
-                      <div className="flex items-center gap-3 mb-4">
-                        <motion.div 
-                          className={`w-14 h-14 rounded-full bg-${useCase.color}-500/20 backdrop-blur-md flex items-center justify-center`}
-                          whileHover={{ 
-                            rotate: [0, -10, 10, -5, 0],
-                            scale: 1.05,
-                            transition: { duration: 0.5 }
-                          }}
-                        >
-                          {useCase.icon}
-                        </motion.div>
-                        <h3 className="text-xl font-providence text-irrelevant-light">
-                          {useCase.title}
-                        </h3>
-                      </div>
-                      <p className="text-irrelevant-light/90 text-base mb-4">
-                        {useCase.description}
-                      </p>
-                      
-                      <div className="flex flex-wrap gap-2">
-                        {useCase.tools.map((tool, i) => (
-                          <motion.div
-                            key={`tool-${i}`}
-                            initial={{ opacity: 0, y: 10 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.5 + (i * 0.1) }}
-                            viewport={{ once: true }}
-                            className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-white/10 text-xs font-medium text-irrelevant-light/80"
-                          >
-                            <div className="w-4 h-4 rounded-full bg-irrelevant-violet/20 flex items-center justify-center">
-                              <span className="text-[0.6rem]">⚙️</span>
-                            </div>
-                            <span>{tool}</span>
-                          </motion.div>
-                        ))}
-                      </div>
-                    </div>
-                    
-                    <motion.div
-                      className="flex justify-end mt-6"
-                      whileHover={{ x: 5 }}
+                    <div 
+                      className={`h-[420px] rounded-xl overflow-hidden relative gradient-border glass-panel cursor-pointer transition-all duration-300 group-hover:shadow-2xl ${useCase.glow}`}
                     >
-                      <Button 
-                        variant="ghost"
-                        className="group-hover:bg-white/10 text-irrelevant-light/80 group-hover:text-irrelevant-light transition-colors flex items-center gap-2"
+                      <div 
+                        className="absolute inset-0 bg-cover bg-center transition-opacity duration-300 group-hover:opacity-90"
+                        style={{
+                          backgroundImage: `url(${useCase.image})`,
+                        }}
                       >
-                        <span className="text-base font-medium">Espiar cómo funciona</span>
-                        <Eye className="w-5 h-5" />
-                      </Button>
-                    </motion.div>
-                  </div>
-                  
-                  <motion.div 
-                    className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                    animate={{ 
-                      boxShadow: ["0 0 0 0px rgba(156, 107, 255, 0)", "0 0 0 2px rgba(156, 107, 255, 0.3)", "0 0 0 0px rgba(156, 107, 255, 0)"] 
-                    }}
-                    transition={{ 
-                      duration: 2,
-                      repeat: Infinity,
-                      ease: "easeInOut" 
-                    }}
-                  />
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </ScrollArea>
-        
-        {filteredCases.length === 0 && (
+                        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-irrelevant-dark/70 to-irrelevant-dark/90 mix-blend-multiply"></div>
+                      </div>
+                      <div className="absolute inset-0 bg-[url('/noise.png')] opacity-10 mix-blend-overlay"></div>
+                      
+                      <div className="relative z-10 p-6 h-full flex flex-col justify-between">
+                        <div>
+                          <div className="flex flex-wrap gap-2 mb-4">
+                            {useCase.tags.map((tag, i) => (
+                              <motion.div 
+                                key={`tag-${i}`}
+                                className="inline-block px-3 py-1 rounded-full bg-white/10 backdrop-blur-sm text-xs text-irrelevant-light/90"
+                                initial={{ opacity: 0, scale: 0.8 }}
+                                whileInView={{ opacity: 1, scale: 1 }}
+                                transition={{ delay: 0.3 + (i * 0.1) }}
+                                viewport={{ once: true }}
+                              >
+                                {tag}
+                              </motion.div>
+                            ))}
+                          </div>
+                          
+                          <div className="flex items-center gap-3 mb-4">
+                            <motion.div 
+                              className={`w-14 h-14 rounded-full bg-${useCase.color}-500/20 backdrop-blur-md flex items-center justify-center`}
+                              whileHover={{ 
+                                rotate: [0, -10, 10, -5, 0],
+                                scale: 1.05,
+                                transition: { duration: 0.5 }
+                              }}
+                            >
+                              {useCase.icon}
+                            </motion.div>
+                            <h3 className="text-xl font-providence text-irrelevant-light">
+                              {useCase.title}
+                            </h3>
+                          </div>
+                          <p className="text-irrelevant-light/90 text-base mb-4">
+                            {useCase.description}
+                          </p>
+                          
+                          <div className="flex flex-wrap gap-2">
+                            {useCase.tools.map((tool, i) => (
+                              <motion.div
+                                key={`tool-${i}`}
+                                initial={{ opacity: 0, y: 10 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.5 + (i * 0.1) }}
+                                viewport={{ once: true }}
+                                className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-white/10 text-xs font-medium text-irrelevant-light/80"
+                              >
+                                <div className="w-4 h-4 rounded-full bg-irrelevant-violet/20 flex items-center justify-center">
+                                  <span className="text-[0.6rem]">⚙️</span>
+                                </div>
+                                <span>{tool}</span>
+                              </motion.div>
+                            ))}
+                          </div>
+                        </div>
+                        
+                        <motion.div
+                          className="flex justify-end mt-6"
+                          whileHover={{ x: 5 }}
+                        >
+                          <Button 
+                            variant="ghost"
+                            className="group-hover:bg-white/10 text-irrelevant-light/80 group-hover:text-irrelevant-light transition-colors flex items-center gap-2"
+                          >
+                            <span className="text-base font-medium">Descubrir la magia detrás</span>
+                            <Eye className="w-5 h-5" />
+                          </Button>
+                        </motion.div>
+                      </div>
+                      
+                      <motion.div 
+                        className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                        animate={{ 
+                          boxShadow: ["0 0 0 0px rgba(156, 107, 255, 0)", "0 0 0 2px rgba(156, 107, 255, 0.3)", "0 0 0 0px rgba(156, 107, 255, 0)"] 
+                        }}
+                        transition={{ 
+                          duration: 2,
+                          repeat: Infinity,
+                          ease: "easeInOut" 
+                        }}
+                      />
+                    </div>
+                  </motion.div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <div className="flex justify-end mt-4 gap-2">
+              <CarouselPrevious className="relative left-0 right-auto h-8 w-8 rounded-full" />
+              <CarouselNext className="relative right-0 left-auto h-8 w-8 rounded-full" />
+            </div>
+          </Carousel>
+        ) : (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
