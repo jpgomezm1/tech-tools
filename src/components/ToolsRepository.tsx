@@ -318,7 +318,10 @@ const ToolsRepository: React.FC = () => {
   };
 
   const filteredToolsByCategory = (category: string) => {
-    return groupedTools[category]?.filter((tool) => {
+    // Add null check to prevent accessing properties of undefined
+    if (!groupedTools[category]) return [];
+    
+    return groupedTools[category].filter((tool) => {
       const matchesSearch = !filters.search || 
         tool.name.toLowerCase().includes(filters.search.toLowerCase()) || 
         tool.description.toLowerCase().includes(filters.search.toLowerCase());
@@ -331,7 +334,10 @@ const ToolsRepository: React.FC = () => {
   };
 
   const filteredToolsByUseCase = (useCase: string) => {
-    return useCaseGroups[useCase]?.filter((tool) => {
+    // Add null check to prevent accessing properties of undefined
+    if (!useCaseGroups[useCase]) return [];
+    
+    return useCaseGroups[useCase].filter((tool) => {
       const matchesSearch = !filters.search || 
         tool.name.toLowerCase().includes(filters.search.toLowerCase()) || 
         tool.description.toLowerCase().includes(filters.search.toLowerCase());
@@ -721,7 +727,8 @@ const ToolsRepository: React.FC = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               <AnimatePresence>
-                {filteredToolsByUseCase(filters.useCase).map((tool, index) => (
+                {/* Add null check for filteredToolsByUseCase */}
+                {filteredToolsByUseCase(filters.useCase)?.map((tool, index) => (
                   <motion.div
                     key={tool.id}
                     custom={index}
@@ -772,7 +779,8 @@ const ToolsRepository: React.FC = () => {
                         </div>
 
                         <div className="flex flex-wrap gap-1.5 mt-auto">
-                          {tool.useCase.slice(0, 3).map((useCase, i) => (
+                          {/* Add null check for tool.useCase */}
+                          {tool.useCase && tool.useCase.slice(0, 3).map((useCase, i) => (
                             <div key={i} className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-white/5 text-xs">
                               <Zap className="w-3 h-3 text-irrelevant-violet" />
                               <span>{useCase}</span>
@@ -792,7 +800,7 @@ const ToolsRepository: React.FC = () => {
         )}
       </div>
 
-      {/* Tool Details Dialog - Redesigned */}
+      {/* Tool Details Dialog - Add null checks here too */}
       <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
         <DialogContent className="bg-irrelevant-dark border border-white/10 text-irrelevant-light max-w-4xl">
           {selectedTool && (
@@ -843,11 +851,11 @@ const ToolsRepository: React.FC = () => {
                   </span>
                 </div>
                 
-                {/* Use cases */}
+                {/* Use cases - Add null check for selectedTool.useCase */}
                 <div className="pt-2">
                   <h4 className="text-xl font-providence mb-3 text-gradient">Casos de uso</h4>
                   <div className="flex flex-wrap gap-2">
-                    {selectedTool.useCase.map((useCase, i) => (
+                    {selectedTool.useCase && selectedTool.useCase.map((useCase, i) => (
                       <div key={i} className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-white/5 text-sm">
                         <Zap className="w-4 h-4 text-irrelevant-violet" />
                         <span>{useCase}</span>
@@ -856,11 +864,11 @@ const ToolsRepository: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Tasks */}
+                {/* Tasks - Add null check for selectedTool.tasks */}
                 <div className="pt-2">
                   <h4 className="text-xl font-providence mb-3 text-gradient">Lo que puedes hacer con {selectedTool.name}</h4>
                   <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                    {selectedTool.tasks.map((task, i) => (
+                    {selectedTool.tasks && selectedTool.tasks.map((task, i) => (
                       <li key={i} className="flex items-center gap-2 text-irrelevant-light/80">
                         <div className="w-5 h-5 rounded-full bg-irrelevant-violet/20 flex items-center justify-center shrink-0">
                           <Zap className="w-3 h-3 text-irrelevant-violet" />
@@ -871,11 +879,11 @@ const ToolsRepository: React.FC = () => {
                   </ul>
                 </div>
 
-                {/* Resources */}
+                {/* Resources - Add null check for selectedTool.resources */}
                 <div className="pt-2">
                   <h4 className="text-xl font-providence mb-3 text-gradient">Aprende a sacarle el jugo</h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    {selectedTool.resources.map((resource, i) => (
+                    {selectedTool.resources && selectedTool.resources.map((resource, i) => (
                       <a 
                         key={i} 
                         href={resource.url}
