@@ -178,8 +178,8 @@ const CollectionDetail = ({
         </p>
       </div>
       
-      <ScrollArea className="max-h-[400px]">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pr-4">
+      <ScrollArea className="h-[400px] w-full overflow-y-auto pr-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {collection.tools.map((tool, index) => (
             <motion.div
               key={`${collection.id}-tool-${index}`}
@@ -314,7 +314,6 @@ const CuratedCollections: React.FC = () => {
                 
                 <div className="relative z-10 p-8 h-full flex flex-col justify-between">
                   <div>
-                    {/* Tag badge */}
                     <motion.div 
                       className="inline-block px-3 py-1 rounded-full bg-white/10 backdrop-blur-sm text-xs text-irrelevant-light/90 mb-4"
                       initial={{ opacity: 0, scale: 0.8 }}
@@ -357,7 +356,6 @@ const CuratedCollections: React.FC = () => {
                   </motion.div>
                 </div>
                 
-                {/* Animated glow effect on hover */}
                 <motion.div 
                   className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                   animate={{ 
@@ -371,7 +369,6 @@ const CuratedCollections: React.FC = () => {
                 />
               </div>
 
-              {/* Lock overlay for locked collections */}
               {collection.locked && !unlockedAll && (
                 <div className="absolute inset-0 bg-irrelevant-dark/70 backdrop-blur-sm rounded-xl flex flex-col items-center justify-center gap-4">
                   <motion.div 
