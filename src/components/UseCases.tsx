@@ -1,11 +1,16 @@
+
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, Zap, Rocket, Sparkles, Workflow, X, Filter, Play, Link2, Copy, ChevronLeft, ArrowUpRight, ExternalLink, Check } from "lucide-react";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { ArrowRight, Zap, Rocket, Sparkles, Workflow, X, Filter, Play, Link2, Copy, ChevronLeft, ArrowUpRight, ExternalLink, Check, Eye } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Button } from "@/components/ui/button";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
+// Estructura de datos escalable para los casos de uso
 const useCases = [
   {
     id: 1,
@@ -32,7 +37,8 @@ const useCases = [
     image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=1470&auto=format&fit=crop",
     imageAlt: "Persona trabajando con laptop mientras el sistema responde automáticamente",
     problem: "Pasar horas respondiendo consultas básicas y coordinando agendas con clientes potenciales",
-    testimonial: "Con este flujo automatizado, podemos generar el doble de propuestas con la mitad del equipo comercial."
+    testimonial: "Con este flujo automatizado, podemos generar el doble de propuestas con la mitad del equipo comercial.",
+    tagline: "Este flujo hace más que tu equipo comercial... sin pedir aumento."
   },
   {
     id: 2,
@@ -59,7 +65,8 @@ const useCases = [
     image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1744&auto=format&fit=crop",
     imageAlt: "Espacio de trabajo creativo con múltiples pantallas mostrando diseños",
     problem: "Depender de un equipo creativo costoso y lento para generar contenido para redes",
-    testimonial: "Pasamos de publicar 2 veces por semana a tener contenido diario en 3 plataformas diferentes, sin contratar a nadie más."
+    testimonial: "Pasamos de publicar 2 veces por semana a tener contenido diario en 3 plataformas diferentes, sin contratar a nadie más.",
+    tagline: "Dormí tranquilo. Este flujo trabaja por ti."
   },
   {
     id: 3,
@@ -86,7 +93,8 @@ const useCases = [
     image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1470&auto=format&fit=crop",
     imageAlt: "Dashboard analítico con visualizaciones de datos",
     problem: "Tener datos dispersos en múltiples sistemas sin capacidad de análisis unificado",
-    testimonial: "Ahora tomamos decisiones de inversión basadas en datos reales, no en intuiciones o reportes obsoletos."
+    testimonial: "Ahora tomamos decisiones de inversión basadas en datos reales, no en intuiciones o reportes obsoletos.",
+    tagline: "Este flujo ve patrones donde tu equipo solo ve números."
   },
   {
     id: 4,
@@ -113,7 +121,8 @@ const useCases = [
     image: "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?q=80&w=1470&auto=format&fit=crop",
     imageAlt: "Interfaz de diseño web con elementos visuales coloridos",
     problem: "Depender de equipos de desarrollo costosos para crear y mantener sitios web profesionales",
-    testimonial: "Lanzamos 4 sitios web para diferentes productos en el tiempo que antes nos tomaba crear uno solo."
+    testimonial: "Lanzamos 4 sitios web para diferentes productos en el tiempo que antes nos tomaba crear uno solo.",
+    tagline: "Despide a tu equipo de desarrollo. Este flujo diseña mejor y más rápido."
   },
 ];
 
@@ -122,48 +131,31 @@ const filterOptions = {
   objectives: ["Ahorrar tiempo", "Aumentar ventas", "Tomar decisiones", "Escalar sin equipo"]
 };
 
+// Componente para mostrar el detalle de un caso de uso dentro del Dialog
 const UseCaseDetail = ({ 
   useCase, 
-  onBack 
+  onClose 
 }: { 
   useCase: typeof useCases[0], 
-  onBack: () => void 
+  onClose: () => void 
 }) => {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
-      transition={{ duration: 0.4 }}
-      className="space-y-8"
-    >
+    <div className="space-y-8 px-4">
       <div className="flex justify-between items-center">
         <motion.button
           initial={{ x: -10, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ delay: 0.2 }}
-          onClick={onBack}
+          onClick={onClose}
           className="flex items-center gap-2 text-irrelevant-light/80 hover:text-irrelevant-light transition-colors group"
         >
           <ChevronLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform duration-200" />
           <span>Volver a flujos</span>
         </motion.button>
         
-        <motion.div
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          className="flex items-center gap-3"
-        >
-          {useCase.tags.map(tag => (
-            <span 
-              key={tag} 
-              className="px-3 py-1 rounded-full bg-irrelevant-violet/20 text-irrelevant-light/90 text-xs font-medium"
-            >
-              {tag}
-            </span>
-          ))}
-        </motion.div>
+        <DialogClose className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors">
+          <X className="h-5 w-5" />
+        </DialogClose>
       </div>
       
       <motion.div
@@ -181,6 +173,9 @@ const UseCaseDetail = ({
         <h3 className="text-lg text-irrelevant-light/70">
           <em>Antes conocido como "{useCase.originalTitle}"</em>
         </h3>
+        <p className="text-xl text-irrelevant-light/90 font-semibold italic">
+          "{useCase.tagline}"
+        </p>
         <p className="text-irrelevant-light/90 text-lg">
           {useCase.longDescription}
         </p>
@@ -193,23 +188,19 @@ const UseCaseDetail = ({
         className="grid grid-cols-1 md:grid-cols-2 gap-6"
       >
         <Card className={`glass-panel border-${useCase.color}-500/30 ${useCase.glow}`}>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+          <CardContent className="p-6">
+            <h3 className="text-lg font-semibold mb-2 flex items-center gap-2">
               <span className="text-lg">⚡ Problema</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+            </h3>
             <p className="text-irrelevant-light/90">{useCase.problem}</p>
           </CardContent>
         </Card>
         
         <Card className={`glass-panel border-${useCase.color}-500/30 ${useCase.glow}`}>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+          <CardContent className="p-6">
+            <h3 className="text-lg font-semibold mb-2 flex items-center gap-2">
               <span className="text-lg">🎯 Objetivo</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+            </h3>
             <p className="text-irrelevant-light/90 text-lg font-medium">{useCase.objective}</p>
           </CardContent>
         </Card>
@@ -273,7 +264,7 @@ const UseCaseDetail = ({
           {useCase.benefits.map((benefit, index) => (
             <div key={index} className="flex items-start gap-3">
               <div className="w-6 h-6 rounded-full bg-irrelevant-violet/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                <span className="text-sm">✓</span>
+                <Check className="w-4 h-4 text-irrelevant-light" />
               </div>
               <p className="text-irrelevant-light/80">{benefit}</p>
             </div>
@@ -306,7 +297,7 @@ const UseCaseDetail = ({
       >
         {useCase.hasVideo ? (
           <>
-            <div className="absolute inset-0 bg-gradient-to-br from-black/80 to-black/40 flex items-center justify-center"
+            <div className="absolute inset-0 flex items-center justify-center"
                  style={{
                    backgroundImage: `url(${useCase.image})`,
                    backgroundSize: 'cover',
@@ -342,7 +333,7 @@ const UseCaseDetail = ({
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.7 }}
-        className="flex flex-col md:flex-row gap-6 justify-center"
+        className="flex flex-col md:flex-row gap-6 justify-center mb-6"
       >
         <Button 
           className="bg-irrelevant-violet hover:bg-irrelevant-violet/80 text-white flex items-center gap-2 py-6 px-8 text-lg"
@@ -359,7 +350,7 @@ const UseCaseDetail = ({
           <span>Plantilla de referencia</span>
         </Button>
       </motion.div>
-    </motion.div>
+    </div>
   );
 };
 
@@ -414,277 +405,276 @@ const UseCases: React.FC = () => {
   return (
     <section className="py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        <AnimatePresence mode="wait">
-          {selectedCase === null ? (
-            <motion.div
-              key="cases-grid"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                viewport={{ once: true }}
-                className="mb-10"
-              >
-                <h2 className="text-3xl font-providence mb-4 text-gradient">
-                  Flujos en acción
-                </h2>
-                <p className="text-irrelevant-light/80">
-                  Casos reales que implementamos con estas herramientas para transformar negocios
-                </p>
-              </motion.div>
-              
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                viewport={{ once: true }}
-                className="mb-8 flex flex-wrap items-center gap-3"
-              >
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button variant="outline" className="border-white/10 bg-white/5 text-irrelevant-light flex items-center gap-2">
-                      <Filter className="w-4 h-4" />
-                      <span>Área</span>
-                      {filters.area.length > 0 && (
-                        <span className="w-5 h-5 rounded-full bg-irrelevant-violet text-white text-xs flex items-center justify-center">
-                          {filters.area.length}
-                        </span>
-                      )}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-56 p-2">
-                    <div className="space-y-1">
-                      {filterOptions.areas.map(area => (
-                        <div
-                          key={area}
-                          className={`px-3 py-2 rounded-md cursor-pointer transition-colors ${
-                            filters.area.includes(area)
-                              ? 'bg-irrelevant-violet/20 text-irrelevant-light'
-                              : 'hover:bg-white/5 text-irrelevant-light/70'
-                          }`}
-                          onClick={() => toggleAreaFilter(area)}
-                        >
-                          <div className="flex items-center gap-2">
-                            <div className={`w-4 h-4 rounded-full ${
-                              filters.area.includes(area)
-                                ? 'bg-irrelevant-violet'
-                                : 'bg-white/10'
-                            }`}>
-                              {filters.area.includes(area) && (
-                                <Check className="w-4 h-4 text-white" />
-                              )}
-                            </div>
-                            <span>{area}</span>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </PopoverContent>
-                </Popover>
-                
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button variant="outline" className="border-white/10 bg-white/5 text-irrelevant-light flex items-center gap-2">
-                      <Filter className="w-4 h-4" />
-                      <span>Objetivo</span>
-                      {filters.objective.length > 0 && (
-                        <span className="w-5 h-5 rounded-full bg-irrelevant-violet text-white text-xs flex items-center justify-center">
-                          {filters.objective.length}
-                        </span>
-                      )}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-56 p-2">
-                    <div className="space-y-1">
-                      {filterOptions.objectives.map(objective => (
-                        <div
-                          key={objective}
-                          className={`px-3 py-2 rounded-md cursor-pointer transition-colors ${
-                            filters.objective.includes(objective)
-                              ? 'bg-irrelevant-violet/20 text-irrelevant-light'
-                              : 'hover:bg-white/5 text-irrelevant-light/70'
-                          }`}
-                          onClick={() => toggleObjectiveFilter(objective)}
-                        >
-                          <div className="flex items-center gap-2">
-                            <div className={`w-4 h-4 rounded-full ${
-                              filters.objective.includes(objective)
-                                ? 'bg-irrelevant-violet'
-                                : 'bg-white/10'
-                            }`}>
-                              {filters.objective.includes(objective) && (
-                                <Check className="w-4 h-4 text-white" />
-                              )}
-                            </div>
-                            <span>{objective}</span>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </PopoverContent>
-                </Popover>
-                
-                {(filters.area.length > 0 || filters.objective.length > 0) && (
-                  <Button 
-                    variant="ghost" 
-                    size="sm"
-                    onClick={clearFilters}
-                    className="text-irrelevant-light/70 hover:text-irrelevant-light"
-                  >
-                    <X className="w-4 h-4 mr-1" />
-                    Limpiar filtros
-                  </Button>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="mb-10"
+        >
+          <h2 className="text-3xl font-providence mb-4 text-gradient">
+            Flujos en acción
+          </h2>
+          <p className="text-irrelevant-light/80">
+            Casos reales que implementamos con estas herramientas para transformar negocios
+          </p>
+        </motion.div>
+        
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          viewport={{ once: true }}
+          className="mb-8 flex flex-wrap items-center gap-3"
+        >
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" className="border-white/10 bg-white/5 text-irrelevant-light flex items-center gap-2">
+                <Filter className="w-4 h-4" />
+                <span>Área</span>
+                {filters.area.length > 0 && (
+                  <span className="w-5 h-5 rounded-full bg-irrelevant-violet text-white text-xs flex items-center justify-center">
+                    {filters.area.length}
+                  </span>
                 )}
-                
-                {(filters.area.length > 0 || filters.objective.length > 0) && (
-                  <div className="text-sm text-irrelevant-light/70 ml-auto">
-                    Mostrando {filteredCases.length} de {useCases.length} flujos
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-56 p-2">
+              <div className="space-y-1">
+                {filterOptions.areas.map(area => (
+                  <div
+                    key={area}
+                    className={`px-3 py-2 rounded-md cursor-pointer transition-colors ${
+                      filters.area.includes(area)
+                        ? 'bg-irrelevant-violet/20 text-irrelevant-light'
+                        : 'hover:bg-white/5 text-irrelevant-light/70'
+                    }`}
+                    onClick={() => toggleAreaFilter(area)}
+                  >
+                    <div className="flex items-center gap-2">
+                      <div className={`w-4 h-4 rounded-full ${
+                        filters.area.includes(area)
+                          ? 'bg-irrelevant-violet'
+                          : 'bg-white/10'
+                      }`}>
+                        {filters.area.includes(area) && (
+                          <Check className="w-4 h-4 text-white" />
+                        )}
+                      </div>
+                      <span>{area}</span>
+                    </div>
                   </div>
-                )}
-              </motion.div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {filteredCases.map((useCase, index) => (
-                  <motion.div
-                    key={useCase.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: index * 0.1 }}
-                    viewport={{ once: true }}
-                    whileHover={{ y: -5 }}
-                    className="group perspective"
-                    onClick={() => setSelectedCase(useCase.id)}
-                  >
-                    <div 
-                      className={`h-full rounded-xl overflow-hidden relative gradient-border glass-panel cursor-pointer transition-all duration-300 group-hover:shadow-2xl ${useCase.glow}`}
-                    >
-                      <div 
-                        className={`absolute inset-0 bg-gradient-to-b ${useCase.gradient} opacity-70 transition-opacity duration-300 group-hover:opacity-90`}
-                        style={{
-                          backgroundImage: `url(${useCase.image})`,
-                          backgroundSize: 'cover',
-                          backgroundPosition: 'center'
-                        }}
-                      >
-                        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-irrelevant-dark/70 to-irrelevant-dark/90 mix-blend-multiply"></div>
-                      </div>
-                      <div className="absolute inset-0 bg-[url('/noise.png')] opacity-10 mix-blend-overlay"></div>
-                      
-                      <div className="relative z-10 p-8 h-full flex flex-col justify-between">
-                        <div>
-                          <div className="flex flex-wrap gap-2 mb-4">
-                            {useCase.tags.map((tag, i) => (
-                              <motion.div 
-                                key={`tag-${i}`}
-                                className="inline-block px-3 py-1 rounded-full bg-white/10 backdrop-blur-sm text-xs text-irrelevant-light/90"
-                                initial={{ opacity: 0, scale: 0.8 }}
-                                whileInView={{ opacity: 1, scale: 1 }}
-                                transition={{ delay: 0.3 + (i * 0.1) }}
-                                viewport={{ once: true }}
-                              >
-                                {tag}
-                              </motion.div>
-                            ))}
-                          </div>
-                          
-                          <div className="flex items-center gap-3 mb-4">
-                            <motion.div 
-                              className={`w-14 h-14 rounded-full bg-${useCase.color}-500/20 backdrop-blur-md flex items-center justify-center`}
-                              whileHover={{ 
-                                rotate: [0, -10, 10, -5, 0],
-                                scale: 1.05,
-                                transition: { duration: 0.5 }
-                              }}
-                            >
-                              {useCase.icon}
-                            </motion.div>
-                            <h3 className="text-2xl font-providence text-irrelevant-light">
-                              {useCase.title}
-                            </h3>
-                          </div>
-                          <p className="text-irrelevant-light/90 text-lg mb-4">
-                            {useCase.description}
-                          </p>
-                          
-                          <div className="flex flex-wrap gap-2">
-                            {useCase.tools.map((tool, i) => (
-                              <motion.div
-                                key={`tool-${i}`}
-                                initial={{ opacity: 0, y: 10 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.5 + (i * 0.1) }}
-                                viewport={{ once: true }}
-                                className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-white/10 text-xs font-medium text-irrelevant-light/80"
-                              >
-                                <div className="w-4 h-4 rounded-full bg-irrelevant-violet/20 flex items-center justify-center">
-                                  <span className="text-[0.6rem]">⚙️</span>
-                                </div>
-                                <span>{tool}</span>
-                              </motion.div>
-                            ))}
-                          </div>
-                        </div>
-                        
-                        <motion.div
-                          className="flex justify-end mt-6"
-                          whileHover={{ x: 5 }}
-                        >
-                          <Button 
-                            variant="ghost"
-                            className="group-hover:bg-white/10 text-irrelevant-light/80 group-hover:text-irrelevant-light transition-colors flex items-center gap-2"
-                          >
-                            <span className="text-base font-medium">Espiar cómo funciona</span>
-                            <ArrowUpRight className="w-5 h-5" />
-                          </Button>
-                        </motion.div>
-                      </div>
-                      
-                      <motion.div 
-                        className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                        animate={{ 
-                          boxShadow: ["0 0 0 0px rgba(156, 107, 255, 0)", "0 0 0 2px rgba(156, 107, 255, 0.3)", "0 0 0 0px rgba(156, 107, 255, 0)"] 
-                        }}
-                        transition={{ 
-                          duration: 2,
-                          repeat: Infinity,
-                          ease: "easeInOut" 
-                        }}
-                      />
-                    </div>
-                  </motion.div>
                 ))}
               </div>
-              
-              {filteredCases.length === 0 && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="text-center py-16 glass-panel rounded-xl"
-                >
-                  <div className="w-16 h-16 mx-auto rounded-full bg-white/5 flex items-center justify-center mb-4">
-                    <Filter className="w-8 h-8 text-irrelevant-light/60" />
+            </PopoverContent>
+          </Popover>
+          
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" className="border-white/10 bg-white/5 text-irrelevant-light flex items-center gap-2">
+                <Filter className="w-4 h-4" />
+                <span>Objetivo</span>
+                {filters.objective.length > 0 && (
+                  <span className="w-5 h-5 rounded-full bg-irrelevant-violet text-white text-xs flex items-center justify-center">
+                    {filters.objective.length}
+                  </span>
+                )}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-56 p-2">
+              <div className="space-y-1">
+                {filterOptions.objectives.map(objective => (
+                  <div
+                    key={objective}
+                    className={`px-3 py-2 rounded-md cursor-pointer transition-colors ${
+                      filters.objective.includes(objective)
+                        ? 'bg-irrelevant-violet/20 text-irrelevant-light'
+                        : 'hover:bg-white/5 text-irrelevant-light/70'
+                    }`}
+                    onClick={() => toggleObjectiveFilter(objective)}
+                  >
+                    <div className="flex items-center gap-2">
+                      <div className={`w-4 h-4 rounded-full ${
+                        filters.objective.includes(objective)
+                          ? 'bg-irrelevant-violet'
+                          : 'bg-white/10'
+                      }`}>
+                        {filters.objective.includes(objective) && (
+                          <Check className="w-4 h-4 text-white" />
+                        )}
+                      </div>
+                      <span>{objective}</span>
+                    </div>
                   </div>
-                  <h3 className="text-2xl font-providence text-irrelevant-light mb-2">
-                    No hay flujos con estos filtros
-                  </h3>
-                  <p className="text-irrelevant-light/70 max-w-xl mx-auto">
-                    Prueba a cambiar los filtros o revisar otras categorías para encontrar lo que buscas.
-                  </p>
-                </motion.div>
-              )}
-            </motion.div>
-          ) : (
-            <UseCaseDetail 
-              useCase={selectedCaseData as typeof useCases[0]} 
-              onBack={() => setSelectedCase(null)} 
-            />
+                ))}
+              </div>
+            </PopoverContent>
+          </Popover>
+          
+          {(filters.area.length > 0 || filters.objective.length > 0) && (
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={clearFilters}
+              className="text-irrelevant-light/70 hover:text-irrelevant-light"
+            >
+              <X className="w-4 h-4 mr-1" />
+              Limpiar filtros
+            </Button>
           )}
-        </AnimatePresence>
+          
+          {(filters.area.length > 0 || filters.objective.length > 0) && (
+            <div className="text-sm text-irrelevant-light/70 ml-auto">
+              Mostrando {filteredCases.length} de {useCases.length} flujos
+            </div>
+          )}
+        </motion.div>
+
+        {/* Carrusel horizontal con scroll */}
+        <ScrollArea className="w-full overflow-auto pb-6">
+          <div className="flex space-x-6 px-1 min-w-full">
+            {filteredCases.map((useCase, index) => (
+              <motion.div
+                key={useCase.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                whileHover={{ y: -5 }}
+                className="group flex-none w-[340px] md:w-[380px]"
+                onClick={() => setSelectedCase(useCase.id)}
+              >
+                <div 
+                  className={`h-[420px] rounded-xl overflow-hidden relative gradient-border glass-panel cursor-pointer transition-all duration-300 group-hover:shadow-2xl ${useCase.glow}`}
+                >
+                  <div 
+                    className="absolute inset-0 bg-cover bg-center transition-opacity duration-300 group-hover:opacity-90"
+                    style={{
+                      backgroundImage: `url(${useCase.image})`,
+                    }}
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-irrelevant-dark/70 to-irrelevant-dark/90 mix-blend-multiply"></div>
+                  </div>
+                  <div className="absolute inset-0 bg-[url('/noise.png')] opacity-10 mix-blend-overlay"></div>
+                  
+                  <div className="relative z-10 p-6 h-full flex flex-col justify-between">
+                    <div>
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {useCase.tags.map((tag, i) => (
+                          <motion.div 
+                            key={`tag-${i}`}
+                            className="inline-block px-3 py-1 rounded-full bg-white/10 backdrop-blur-sm text-xs text-irrelevant-light/90"
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            whileInView={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: 0.3 + (i * 0.1) }}
+                            viewport={{ once: true }}
+                          >
+                            {tag}
+                          </motion.div>
+                        ))}
+                      </div>
+                      
+                      <div className="flex items-center gap-3 mb-4">
+                        <motion.div 
+                          className={`w-14 h-14 rounded-full bg-${useCase.color}-500/20 backdrop-blur-md flex items-center justify-center`}
+                          whileHover={{ 
+                            rotate: [0, -10, 10, -5, 0],
+                            scale: 1.05,
+                            transition: { duration: 0.5 }
+                          }}
+                        >
+                          {useCase.icon}
+                        </motion.div>
+                        <h3 className="text-xl font-providence text-irrelevant-light">
+                          {useCase.title}
+                        </h3>
+                      </div>
+                      <p className="text-irrelevant-light/90 text-base mb-4">
+                        {useCase.description}
+                      </p>
+                      
+                      <div className="flex flex-wrap gap-2">
+                        {useCase.tools.map((tool, i) => (
+                          <motion.div
+                            key={`tool-${i}`}
+                            initial={{ opacity: 0, y: 10 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.5 + (i * 0.1) }}
+                            viewport={{ once: true }}
+                            className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-white/10 text-xs font-medium text-irrelevant-light/80"
+                          >
+                            <div className="w-4 h-4 rounded-full bg-irrelevant-violet/20 flex items-center justify-center">
+                              <span className="text-[0.6rem]">⚙️</span>
+                            </div>
+                            <span>{tool}</span>
+                          </motion.div>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    <motion.div
+                      className="flex justify-end mt-6"
+                      whileHover={{ x: 5 }}
+                    >
+                      <Button 
+                        variant="ghost"
+                        className="group-hover:bg-white/10 text-irrelevant-light/80 group-hover:text-irrelevant-light transition-colors flex items-center gap-2"
+                      >
+                        <span className="text-base font-medium">Espiar cómo funciona</span>
+                        <Eye className="w-5 h-5" />
+                      </Button>
+                    </motion.div>
+                  </div>
+                  
+                  <motion.div 
+                    className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    animate={{ 
+                      boxShadow: ["0 0 0 0px rgba(156, 107, 255, 0)", "0 0 0 2px rgba(156, 107, 255, 0.3)", "0 0 0 0px rgba(156, 107, 255, 0)"] 
+                    }}
+                    transition={{ 
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "easeInOut" 
+                    }}
+                  />
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </ScrollArea>
+        
+        {filteredCases.length === 0 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-center py-16 glass-panel rounded-xl"
+          >
+            <div className="w-16 h-16 mx-auto rounded-full bg-white/5 flex items-center justify-center mb-4">
+              <Filter className="w-8 h-8 text-irrelevant-light/60" />
+            </div>
+            <h3 className="text-2xl font-providence text-irrelevant-light mb-2">
+              No hay flujos con estos filtros
+            </h3>
+            <p className="text-irrelevant-light/70 max-w-xl mx-auto">
+              Prueba a cambiar los filtros o revisar otras categorías para encontrar lo que buscas.
+            </p>
+          </motion.div>
+        )}
+        
+        {/* Modal para mostrar el detalle del caso */}
+        <Dialog 
+          open={selectedCase !== null} 
+          onOpenChange={(open) => !open && setSelectedCase(null)}
+        >
+          <DialogContent className="bg-irrelevant-dark border border-white/10 text-irrelevant-light w-[95vw] max-w-5xl max-h-[85vh] overflow-y-auto">
+            {selectedCaseData && (
+              <UseCaseDetail 
+                useCase={selectedCaseData} 
+                onClose={() => setSelectedCase(null)} 
+              />
+            )}
+          </DialogContent>
+        </Dialog>
       </div>
     </section>
   );
