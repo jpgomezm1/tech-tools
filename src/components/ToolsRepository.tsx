@@ -1,12 +1,17 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, Filter, Zap, Star, XCircle, ExternalLink, Youtube, BookOpen, Podcast, Lightbulb } from "lucide-react";
+import { 
+  Search, Filter, Zap, Star, XCircle, ExternalLink, Youtube, 
+  BookOpen, Podcast, Lightbulb, ChevronRight, ChevronLeft, Check 
+} from "lucide-react";
 import { Command, CommandInput, CommandList, CommandEmpty, CommandGroup, CommandItem } from "@/components/ui/command";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 
 // Static tools data
 const toolsData = [
@@ -245,6 +250,47 @@ const ToolsRepository: React.FC = () => {
   const [showSearchResults, setShowSearchResults] = useState(false);
   const [selectedTool, setSelectedTool] = useState<(typeof toolsData)[0] | null>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [activeCategory, setActiveCategory] = useState("");
+  const [visibleCategories, setVisibleCategories] = useState<string[]>(categories);
+  const [groupedTools, setGroupedTools] = useState<Record<string, typeof toolsData>>({});
+  const [useCaseGroups, setUseCaseGroups] = useState<Record<string, typeof toolsData>>({});
+
+  // References for scrolling
+  const categoryRefs = useRef<Record<string, HTMLDivElement | null>>({});
+
+  // Group tools by category and useCase
+  useEffect(() => {
+    const byCategory: Record<string, typeof toolsData> = {};
+    const byUseCase: Record<string, typeof toolsData> = {};
+    
+    // Initialize categories
+    categories.forEach(category => {
+      byCategory[category] = [];
+    });
+    
+    // Initialize use cases
+    useCases.forEach(useCase => {
+      byUseCase[useCase] = [];
+    });
+    
+    // Group tools
+    toolsData.forEach(tool => {
+      // Add to category group
+      if (byCategory[tool.category]) {
+        byCategory[tool.category].push(tool);
+      }
+      
+      // Add to each useCase group the tool belongs to
+      tool.useCase.forEach(uc => {
+        if (byUseCase[uc]) {
+          byUseCase[uc].push(tool);
+        }
+      });
+    });
+    
+    setGroupedTools(byCategory);
+    setUseCaseGroups(byUseCase);
+  }, []);
 
   useEffect(() => {
     if (filters.search.length > 1) {
@@ -261,19 +307,41 @@ const ToolsRepository: React.FC = () => {
     }
   }, [filters.search]);
 
-  const filteredTools = toolsData.filter((tool) => {
-    const matchesSearch = tool.name
-      .toLowerCase()
-      .includes(filters.search.toLowerCase()) || tool.description
-      .toLowerCase()
-      .includes(filters.search.toLowerCase());
-    const matchesCategory = !filters.category || tool.category === filters.category;
-    const matchesPrice = !filters.price || tool.price === filters.price;
-    const matchesLevel = !filters.level || tool.level === filters.level;
-    const matchesUseCase = !filters.useCase || tool.useCase.includes(filters.useCase);
+  const scrollToCategory = (category: string) => {
+    if (categoryRefs.current[category]) {
+      categoryRefs.current[category]?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+      setActiveCategory(category);
+    }
+  };
 
-    return matchesSearch && matchesCategory && matchesPrice && matchesLevel && matchesUseCase;
-  });
+  const filteredToolsByCategory = (category: string) => {
+    return groupedTools[category]?.filter((tool) => {
+      const matchesSearch = !filters.search || 
+        tool.name.toLowerCase().includes(filters.search.toLowerCase()) || 
+        tool.description.toLowerCase().includes(filters.search.toLowerCase());
+      const matchesPrice = !filters.price || tool.price === filters.price;
+      const matchesLevel = !filters.level || tool.level === filters.level;
+      const matchesUseCase = !filters.useCase || tool.useCase.includes(filters.useCase);
+
+      return matchesSearch && matchesPrice && matchesLevel && matchesUseCase;
+    });
+  };
+
+  const filteredToolsByUseCase = (useCase: string) => {
+    return useCaseGroups[useCase]?.filter((tool) => {
+      const matchesSearch = !filters.search || 
+        tool.name.toLowerCase().includes(filters.search.toLowerCase()) || 
+        tool.description.toLowerCase().includes(filters.search.toLowerCase());
+      const matchesCategory = !filters.category || tool.category === filters.category;
+      const matchesPrice = !filters.price || tool.price === filters.price;
+      const matchesLevel = !filters.level || tool.level === filters.level;
+
+      return matchesSearch && matchesCategory && matchesPrice && matchesLevel;
+    });
+  };
 
   const handleFilterChange = (key: string, value: string) => {
     setFilters((prev) => ({
@@ -337,243 +405,391 @@ const ToolsRepository: React.FC = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6 }}
-      className="min-h-screen py-20 px-4 sm:px-6 lg:px-8"
+      className="min-h-screen py-20 px-4 sm:px-6 lg:px-8 relative"
     >
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-10">
-          <h2 className="text-3xl font-providence mb-4 text-gradient">
-            Armas Secretas de Productividad
-          </h2>
-          <p className="text-irrelevant-light/80">
-            Explora nuestra colección curada de herramientas que usamos en <span className="italic">irrelevant</span> (y lo que no sirve, no entra)
-          </p>
-        </div>
+      {/* Background patterns */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-10 -right-10 w-64 h-64 bg-irrelevant-violet/10 rounded-full filter blur-3xl"></div>
+        <div className="absolute top-1/3 -left-10 w-72 h-72 bg-irrelevant-purple/10 rounded-full filter blur-3xl"></div>
+        <div className="absolute -bottom-10 right-1/4 w-80 h-80 bg-irrelevant-violet/5 rounded-full filter blur-3xl"></div>
+      </div>
 
-        <div className="mb-8">
-          <div className="flex flex-wrap gap-4 items-center mb-6">
-            <div className="relative flex-grow max-w-md">
-              <Popover open={showSearchResults && searchResults.length > 0}>
-                <PopoverTrigger asChild>
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-irrelevant-light/50 w-5 h-5" />
-                    <input
-                      type="text"
-                      placeholder="Busca herramientas por nombre o función..."
-                      value={filters.search}
-                      onChange={(e) =>
-                        setFilters((prev) => ({ ...prev, search: e.target.value }))
-                      }
-                      className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-irrelevant-violet/50 text-irrelevant-light"
-                    />
-                  </div>
-                </PopoverTrigger>
-                <PopoverContent align="start" className="w-[300px] p-0 bg-irrelevant-dark border border-white/10">
-                  <Command className="bg-transparent">
-                    <CommandList>
-                      <CommandEmpty>No hay resultados</CommandEmpty>
-                      <CommandGroup heading="Sugerencias">
-                        {searchResults.map((tool) => (
-                          <CommandItem
-                            key={tool.id}
-                            onSelect={() => {
-                              setFilters(prev => ({ ...prev, search: tool.name }));
-                              setShowSearchResults(false);
-                            }}
-                            className="flex items-center gap-2 py-2 cursor-pointer hover:bg-white/5"
-                          >
-                            <div className="w-6 h-6 rounded-full bg-white/10">
-                              <img src={tool.logo} alt={tool.name} className="w-6 h-6 object-contain rounded-full" />
-                            </div>
-                            <span>{tool.name}</span>
-                            <span className="text-xs text-irrelevant-light/50 ml-auto">{tool.category}</span>
-                          </CommandItem>
-                        ))}
-                      </CommandGroup>
-                    </CommandList>
-                  </Command>
-                </PopoverContent>
-              </Popover>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {categories.map((category) => (
-                <motion.button
-                  key={category}
-                  onClick={() => handleFilterChange("category", category)}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
-                    filters.category === category
-                      ? "bg-gradient-to-r from-irrelevant-violet to-irrelevant-purple text-white"
-                      : "bg-white/5 text-irrelevant-light/80 hover:bg-white/10"
-                  }`}
-                >
-                  {category}
-                </motion.button>
-              ))}
-            </div>
-          </div>
-
-          <div className="flex flex-wrap gap-4 mb-6">
-            <div className="flex items-center gap-2">
-              <Filter className="w-5 h-5 text-irrelevant-light/50" />
-              <span className="text-sm text-irrelevant-light/50">Filtros:</span>
-            </div>
-
-            <div className="flex flex-wrap gap-2">
-              {levels.map((level) => (
-                <motion.button
-                  key={level}
-                  onClick={() => handleFilterChange("level", level)}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className={`px-3 py-1 rounded-full text-xs font-medium transition-all duration-300 ${
-                    filters.level === level
-                      ? "bg-gradient-to-r from-irrelevant-violet to-irrelevant-purple text-white"
-                      : "bg-white/5 text-irrelevant-light/80 hover:bg-white/10"
-                  }`}
-                >
-                  {level}
-                </motion.button>
-              ))}
-            </div>
-
-            <div className="flex flex-wrap gap-2">
-              {prices.map((price) => (
-                <motion.button
-                  key={price}
-                  onClick={() => handleFilterChange("price", price)}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className={`px-3 py-1 rounded-full text-xs font-medium transition-all duration-300 ${
-                    filters.price === price
-                      ? "bg-gradient-to-r from-irrelevant-violet to-irrelevant-purple text-white"
-                      : "bg-white/5 text-irrelevant-light/80 hover:bg-white/10"
-                  }`}
-                >
-                  {price}
-                </motion.button>
-              ))}
-            </div>
-            
-            <motion.button
-              onClick={clearFilters}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className={`px-3 py-1 rounded-full text-xs font-medium transition-all duration-300 border border-white/10 
-                flex items-center gap-1 text-irrelevant-light/60 hover:text-irrelevant-light/90 ml-auto`}
-            >
-              <XCircle className="w-3.5 h-3.5" />
-              <span>Limpiar filtros</span>
-            </motion.button>
-          </div>
+      <div className="max-w-7xl mx-auto relative z-10">
+        <div className="mb-14">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <h2 className="text-4xl font-providence mb-6 text-gradient">
+              El Arsenal Tech de Superhéroes
+            </h2>
+            <p className="text-xl text-irrelevant-light/80 max-w-3xl">
+              Herramientas no-code, flujos de trabajo con IA y joyas ocultas que usamos todos los días para hacer más con menos tiempo. 
+              Este es el arsenal que nos da superpoderes, y ahora también es tuyo.
+            </p>
+          </motion.div>
           
-          <div className="mt-8 mb-6">
-            <h3 className="text-lg font-providence mb-3 text-irrelevant-light/90">¿Qué quieres lograr?</h3>
-            <div className="flex flex-wrap gap-2">
-              {useCases.map((useCase) => (
-                <motion.button
-                  key={useCase}
-                  onClick={() => handleFilterChange("useCase", useCase)}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-300 ${
-                    filters.useCase === useCase
-                      ? "bg-gradient-to-r from-irrelevant-violet to-irrelevant-purple text-white"
-                      : "bg-white/5 text-irrelevant-light/80 hover:bg-white/10"
-                  }`}
-                >
-                  {useCase}
-                </motion.button>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          <AnimatePresence>
-            {filteredTools.map((tool, index) => (
-              <motion.div
-                key={tool.id}
-                custom={index}
-                initial="hidden"
-                animate="visible"
-                variants={cardVariants}
-                whileHover="hover"
-                layout
-                onClick={() => handleOpenDetails(tool)}
-                className="cursor-pointer rounded-2xl overflow-hidden"
-              >
-                <div className="gradient-border rounded-[20px] p-5 group relative overflow-hidden h-full flex flex-col bg-white/5">
-                  {/* Background gradient */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-20 z-0"></div>
-                  
-                  <div className="relative z-10 h-full flex flex-col">
-                    <div className="flex gap-4 mb-4">
-                      <div className="w-16 h-16 rounded-xl bg-white/10 p-2 flex items-center justify-center">
-                        <img
-                          src={tool.logo}
-                          alt={tool.name}
-                          className="w-full h-full object-contain"
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="mt-8 relative"
+          >
+            <div className="glass-panel rounded-2xl p-6 backdrop-blur-lg">
+              <div className="flex flex-col md:flex-row gap-4 items-start md:items-center">
+                <div className="relative flex-grow max-w-md">
+                  <Popover open={showSearchResults && searchResults.length > 0}>
+                    <PopoverTrigger asChild>
+                      <div className="relative">
+                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-irrelevant-light/50 w-5 h-5" />
+                        <input
+                          type="text"
+                          placeholder="Busca tu próximo superpoder..."
+                          value={filters.search}
+                          onChange={(e) =>
+                            setFilters((prev) => ({ ...prev, search: e.target.value }))
+                          }
+                          className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-irrelevant-violet/50 text-irrelevant-light"
                         />
                       </div>
-                      <div className="flex-1">
-                        <h3 className="font-bold text-xl text-irrelevant-light flex items-center gap-2">
-                          {tool.name}
-                          {tool.recommended && (
-                            <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-                          )}
-                        </h3>
-                        <p className="text-sm text-irrelevant-light/70">
-                          {tool.description}
-                        </p>
+                    </PopoverTrigger>
+                    <PopoverContent align="start" className="w-[300px] p-0 bg-irrelevant-dark border border-white/10">
+                      <Command className="bg-transparent">
+                        <CommandList>
+                          <CommandEmpty>No hay resultados</CommandEmpty>
+                          <CommandGroup heading="Sugerencias">
+                            {searchResults.map((tool) => (
+                              <CommandItem
+                                key={tool.id}
+                                onSelect={() => {
+                                  setFilters(prev => ({ ...prev, search: tool.name }));
+                                  setShowSearchResults(false);
+                                }}
+                                className="flex items-center gap-2 py-2 cursor-pointer hover:bg-white/5"
+                              >
+                                <div className="w-6 h-6 rounded-full bg-white/10">
+                                  <img src={tool.logo} alt={tool.name} className="w-6 h-6 object-contain rounded-full" />
+                                </div>
+                                <span>{tool.name}</span>
+                                <span className="text-xs text-irrelevant-light/50 ml-auto">{tool.category}</span>
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        </CommandList>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
+                </div>
+                
+                <div className="flex items-center gap-3 ml-auto">
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button variant="outline" className="border-white/10 bg-white/5 text-irrelevant-light hover:bg-white/10">
+                        <Filter className="w-4 h-4 mr-2" />
+                        <span>Filtros</span>
+                        {(filters.price || filters.level || filters.useCase) && (
+                          <span className="ml-2 w-2 h-2 rounded-full bg-irrelevant-violet"></span>
+                        )}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-80 p-4 bg-irrelevant-dark border border-white/10">
+                      <div className="space-y-4">
+                        <div>
+                          <h4 className="text-sm font-medium mb-3 text-irrelevant-light/70">Nivel de dificultad</h4>
+                          <div className="flex flex-wrap gap-2">
+                            {levels.map((level) => (
+                              <Button
+                                key={level}
+                                onClick={() => handleFilterChange("level", level)}
+                                variant="outline"
+                                size="sm"
+                                className={`rounded-full border-white/10 ${
+                                  filters.level === level
+                                    ? "bg-irrelevant-violet text-white"
+                                    : "bg-white/5 text-irrelevant-light/80 hover:bg-white/10"
+                                }`}
+                              >
+                                {filters.level === level && <Check className="w-3 h-3 mr-1" />}
+                                {level}
+                              </Button>
+                            ))}
+                          </div>
+                        </div>
+                        
+                        <div>
+                          <h4 className="text-sm font-medium mb-3 text-irrelevant-light/70">Precio</h4>
+                          <div className="flex flex-wrap gap-2">
+                            {prices.map((price) => (
+                              <Button
+                                key={price}
+                                onClick={() => handleFilterChange("price", price)}
+                                variant="outline"
+                                size="sm"
+                                className={`rounded-full border-white/10 ${
+                                  filters.price === price
+                                    ? "bg-irrelevant-violet text-white"
+                                    : "bg-white/5 text-irrelevant-light/80 hover:bg-white/10"
+                                }`}
+                              >
+                                {filters.price === price && <Check className="w-3 h-3 mr-1" />}
+                                {price}
+                              </Button>
+                            ))}
+                          </div>
+                        </div>
+
+                        <div>
+                          <h4 className="text-sm font-medium mb-3 text-irrelevant-light/70">Caso de uso</h4>
+                          <ScrollArea className="h-40 pr-3">
+                            <div className="flex flex-wrap gap-2">
+                              {useCases.map((useCase) => (
+                                <Button
+                                  key={useCase}
+                                  onClick={() => handleFilterChange("useCase", useCase)}
+                                  variant="outline"
+                                  size="sm"
+                                  className={`rounded-full border-white/10 ${
+                                    filters.useCase === useCase
+                                      ? "bg-irrelevant-violet text-white"
+                                      : "bg-white/5 text-irrelevant-light/80 hover:bg-white/10"
+                                  }`}
+                                >
+                                  {filters.useCase === useCase && <Check className="w-3 h-3 mr-1" />}
+                                  {useCase}
+                                </Button>
+                              ))}
+                            </div>
+                          </ScrollArea>
+                        </div>
+                        
+                        {(filters.price || filters.level || filters.useCase) && (
+                          <Button 
+                            onClick={clearFilters}
+                            variant="link" 
+                            className="text-irrelevant-light/60 hover:text-irrelevant-light/90 p-0 h-auto"
+                          >
+                            <XCircle className="w-3.5 h-3.5 mr-1" />
+                            <span>Limpiar filtros</span>
+                          </Button>
+                        )}
+                      </div>
+                    </PopoverContent>
+                  </Popover>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Category Navigation */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="mb-10"
+        >
+          <div className="flex items-center space-x-1 md:space-x-2 overflow-x-auto scrollbar-hide py-2">
+            {categories.map((category) => (
+              <Button
+                key={category}
+                onClick={() => scrollToCategory(category)}
+                variant="outline"
+                className={`rounded-full whitespace-nowrap px-4 py-2 text-sm font-medium transition-all duration-300 border-white/10 ${
+                  activeCategory === category
+                    ? "bg-gradient-to-r from-irrelevant-violet to-irrelevant-purple text-white"
+                    : "bg-white/5 text-irrelevant-light/80 hover:bg-white/10"
+                }`}
+              >
+                {category}
+              </Button>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Tools By Category */}
+        <div className="space-y-20">
+          {categories.map((category, categoryIndex) => (
+            <motion.div
+              key={category}
+              ref={(el) => (categoryRefs.current[category] = el)}
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: categoryIndex * 0.1 }}
+              className="relative"
+            >
+              <div className="mb-6">
+                <h3 className="text-2xl font-providence text-gradient">{category}</h3>
+                <p className="text-irrelevant-light/70">
+                  {category === "IA" && "Potencia tu trabajo con las mejores herramientas de inteligencia artificial."}
+                  {category === "Automatización" && "Haz que las máquinas trabajen por ti con estos flujos automáticos."}
+                  {category === "Productividad" && "Maximiza tu rendimiento y haz más en menos tiempo."}
+                  {category === "No-Code" && "Crea sin saber programar y lanza productos más rápido."}
+                  {category === "Diseño" && "Herramientas visuales para crear experiencias sorprendentes."}
+                </p>
+              </div>
+
+              {filteredToolsByCategory(category).length > 0 ? (
+                <Carousel
+                  opts={{
+                    align: "start",
+                    loop: false,
+                  }}
+                  className="w-full"
+                >
+                  <CarouselContent className="-ml-2 md:-ml-4">
+                    {filteredToolsByCategory(category).map((tool, index) => (
+                      <CarouselItem key={tool.id} className="pl-2 md:pl-4 sm:basis-1/2 md:basis-1/3 lg:basis-1/4">
+                        <motion.div
+                          custom={index}
+                          initial="hidden"
+                          animate="visible"
+                          variants={cardVariants}
+                          whileHover="hover"
+                          onClick={() => handleOpenDetails(tool)}
+                          className="cursor-pointer h-full"
+                        >
+                          <div className="gradient-border rounded-[20px] p-5 group relative overflow-hidden h-full flex flex-col bg-white/5">
+                            {/* Background gradient */}
+                            <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-20 z-0"></div>
+                            
+                            <div className="relative z-10 h-full flex flex-col">
+                              <div className="flex gap-4 mb-4">
+                                <div className="w-14 h-14 rounded-xl bg-white/10 p-2 flex items-center justify-center">
+                                  <img
+                                    src={tool.logo}
+                                    alt={tool.name}
+                                    className="w-full h-full object-contain"
+                                  />
+                                </div>
+                                <div className="flex-1">
+                                  <h3 className="font-bold text-xl text-irrelevant-light flex items-center gap-2">
+                                    {tool.name}
+                                    {tool.recommended && (
+                                      <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
+                                    )}
+                                  </h3>
+                                  <p className="text-sm text-irrelevant-light/70">
+                                    {tool.description}
+                                  </p>
+                                </div>
+                              </div>
+                              
+                              <div className="flex flex-wrap gap-1.5 mt-auto">
+                                {tool.useCase.slice(0, 3).map((useCase, i) => (
+                                  <div key={i} className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-white/5 text-xs">
+                                    <Zap className="w-3 h-3 text-irrelevant-violet" />
+                                    <span>{useCase}</span>
+                                  </div>
+                                ))}
+                              </div>
+                              
+                              {/* Hover glow effect */}
+                              <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-irrelevant-violet/0 via-irrelevant-violet/0 to-irrelevant-purple/0 opacity-0 blur group-hover:opacity-20 group-hover:via-irrelevant-violet/20 transition-all duration-500"></div>
+                            </div>
+                          </div>
+                        </motion.div>
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                  <div className="flex items-center justify-end mt-4 gap-2">
+                    <CarouselPrevious className="relative inset-0 translate-y-0 bg-white/5 border-white/10 text-irrelevant-light hover:bg-white/10 hover:text-white" />
+                    <CarouselNext className="relative inset-0 translate-y-0 bg-white/5 border-white/10 text-irrelevant-light hover:bg-white/10 hover:text-white" />
+                  </div>
+                </Carousel>
+              ) : (
+                <div className="bg-white/5 border border-white/10 rounded-xl p-8 text-center">
+                  <p className="text-irrelevant-light/60">No hay herramientas que coincidan con los filtros seleccionados</p>
+                </div>
+              )}
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Use Case Showcase */}
+        {filters.useCase && (
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="mt-20 pb-10"
+          >
+            <div className="mb-6">
+              <h3 className="text-2xl font-providence text-gradient">Herramientas para: {filters.useCase}</h3>
+              <p className="text-irrelevant-light/70">Superpoderes específicos para este caso de uso</p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              <AnimatePresence>
+                {filteredToolsByUseCase(filters.useCase).map((tool, index) => (
+                  <motion.div
+                    key={tool.id}
+                    custom={index}
+                    initial="hidden"
+                    animate="visible"
+                    variants={cardVariants}
+                    whileHover="hover"
+                    layout
+                    onClick={() => handleOpenDetails(tool)}
+                    className="cursor-pointer rounded-2xl overflow-hidden"
+                  >
+                    <div className="gradient-border rounded-[20px] p-5 group relative overflow-hidden h-full flex flex-col bg-white/5">
+                      {/* Background gradient */}
+                      <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-20 z-0"></div>
+                      
+                      <div className="relative z-10 h-full flex flex-col">
+                        <div className="flex gap-4 mb-4">
+                          <div className="w-16 h-16 rounded-xl bg-white/10 p-2 flex items-center justify-center">
+                            <img
+                              src={tool.logo}
+                              alt={tool.name}
+                              className="w-full h-full object-contain"
+                            />
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="font-bold text-xl text-irrelevant-light flex items-center gap-2">
+                              {tool.name}
+                              {tool.recommended && (
+                                <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
+                              )}
+                            </h3>
+                            <p className="text-sm text-irrelevant-light/70">
+                              {tool.description}
+                            </p>
+                          </div>
+                        </div>
+                        
+                        <div className="flex flex-wrap gap-2 mb-3">
+                          <span className="px-2 py-1 rounded-full bg-white/5 text-xs text-irrelevant-light/80">
+                            {tool.category}
+                          </span>
+                          <span className="px-2 py-1 rounded-full bg-white/5 text-xs text-irrelevant-light/80">
+                            {tool.level}
+                          </span>
+                          <span className="px-2 py-1 rounded-full bg-white/5 text-xs text-irrelevant-light/80">
+                            {tool.price}
+                          </span>
+                        </div>
+
+                        <div className="flex flex-wrap gap-1.5 mt-auto">
+                          {tool.useCase.slice(0, 3).map((useCase, i) => (
+                            <div key={i} className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-white/5 text-xs">
+                              <Zap className="w-3 h-3 text-irrelevant-violet" />
+                              <span>{useCase}</span>
+                            </div>
+                          ))}
+                        </div>
+                        
+                        {/* Hover glow effect */}
+                        <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-irrelevant-violet/0 via-irrelevant-violet/0 to-irrelevant-purple/0 opacity-0 blur group-hover:opacity-20 group-hover:via-irrelevant-violet/20 transition-all duration-500"></div>
                       </div>
                     </div>
-                    
-                    <div className="flex flex-wrap gap-2 mb-3">
-                      <span className="px-2 py-1 rounded-full bg-white/5 text-xs text-irrelevant-light/80">
-                        {tool.category}
-                      </span>
-                      <span className="px-2 py-1 rounded-full bg-white/5 text-xs text-irrelevant-light/80">
-                        {tool.level}
-                      </span>
-                      <span className="px-2 py-1 rounded-full bg-white/5 text-xs text-irrelevant-light/80">
-                        {tool.price}
-                      </span>
-                    </div>
-
-                    <div className="flex flex-wrap gap-1.5 mt-auto">
-                      {tool.useCase.slice(0, 3).map((useCase, i) => (
-                        <div key={i} className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-white/5 text-xs">
-                          <Zap className="w-3 h-3 text-irrelevant-violet" />
-                          <span>{useCase}</span>
-                        </div>
-                      ))}
-                    </div>
-                    
-                    {/* Hover indicator */}
-                    <div className="absolute right-4 bottom-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger>
-                            <div className="w-8 h-8 rounded-full bg-irrelevant-violet/20 flex items-center justify-center">
-                              <Zap className="w-4 h-4 text-irrelevant-violet" />
-                            </div>
-                          </TooltipTrigger>
-                          <TooltipContent side="left">
-                            <p>Ver más detalles</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    </div>
-                  </div>
-                  
-                  {/* Hover glow effect */}
-                  <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-irrelevant-violet/0 via-irrelevant-violet/0 to-irrelevant-purple/0 opacity-0 blur group-hover:opacity-20 group-hover:via-irrelevant-violet/20 transition-all duration-500"></div>
-                </div>
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </div>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </div>
+          </motion.div>
+        )}
       </div>
 
       {/* Tool Details Dialog - Redesigned */}
@@ -682,7 +898,7 @@ const ToolsRepository: React.FC = () => {
                         <Lightbulb className="w-5 h-5 text-irrelevant-violet" />
                       </div>
                       <div>
-                        <h5 className="font-medium text-irrelevant-light mb-1">Tip del equipo irrelevant</h5>
+                        <h5 className="font-medium text-irrelevant-light mb-1">Tip del escuadrón irrelevant</h5>
                         <p className="text-irrelevant-light/80 text-sm">{selectedTool.teamTip}</p>
                       </div>
                     </div>
@@ -694,7 +910,7 @@ const ToolsRepository: React.FC = () => {
                   <Button 
                     className="bg-gradient-to-r from-irrelevant-violet to-irrelevant-purple text-white px-8 py-6 h-auto text-base font-medium"
                   >
-                    <span>Ir a la herramienta</span>
+                    <span>Activar este superpoder</span>
                     <ExternalLink className="w-5 h-5 ml-2" />
                   </Button>
                 </div>
