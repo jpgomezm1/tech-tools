@@ -1,8 +1,7 @@
-// src/services/api.js
 import axios from 'axios';
 
-// La URL base de tu API de Flask
-const API_URL = 'http://localhost:5000/api';
+// La URL base de tu API de Flask desde variables de entorno
+const API_URL = import.meta.env.VITE_API_URL;
 
 // Registrar un nuevo usuario
 export const registerUser = async (userData) => {
