@@ -229,7 +229,6 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
     setSecretMode(!secretMode);
   };
 
-
   return (
     <AnimatePresence>
       {isOpen && (
@@ -250,479 +249,485 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
             exit="exit"
             variants={modalVariants}
           >
+            {/* 
+              Se agrega un contenedor adicional con "max-h-[80vh] overflow-y-auto"
+              para permitir el scroll en pantallas pequeñas.
+            */}
             <div className="glass-panel w-full max-w-2xl rounded-xl p-6 sm:p-8 overflow-hidden relative">
-              {isSubmitting && (
-                <div className="absolute inset-0 bg-black/40 flex items-center justify-center z-50">
-                  <CustomLoader />
-                </div>
-              )}
-              <div className="flex justify-between items-center mb-6">
-                {checkSecretPhrase() ? (
-                  <h2 className="text-2xl font-providence text-gradient flex items-center gap-2">
-                    <Lock className="w-5 h-5 text-irrelevant-violet" />
-                    ¡Acceso exclusivo desbloqueado!
-                  </h2>
-                ) : (
-                  <h2 className="text-2xl font-providence text-gradient">
-                    {formSubmitted 
-                      ? "¡Registro completado!"
-                      : "Únete a nuestro arsenal tech"
-                    }
-                  </h2>
+              <div className="max-h-[80vh] overflow-y-auto">
+                {isSubmitting && (
+                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center z-50">
+                    <CustomLoader />
+                  </div>
                 )}
-                <button
-                  onClick={onClose}
-                  className="p-2 rounded-full hover:bg-white/10 transition-colors"
-                >
-                  <X className="w-5 h-5 text-irrelevant-light" />
-                </button>
-              </div>
-
-              {checkSecretPhrase() ? (
-                <div className="text-center py-8">
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ type: "spring", stiffness: 200, damping: 10 }}
-                    className="w-20 h-20 bg-gradient-to-r from-irrelevant-violet to-irrelevant-purple rounded-full flex items-center justify-center mx-auto mb-6"
+                <div className="flex justify-between items-center mb-6">
+                  {checkSecretPhrase() ? (
+                    <h2 className="text-2xl font-providence text-gradient flex items-center gap-2">
+                      <Lock className="w-5 h-5 text-irrelevant-violet" />
+                      ¡Acceso exclusivo desbloqueado!
+                    </h2>
+                  ) : (
+                    <h2 className="text-2xl font-providence text-gradient">
+                      {formSubmitted 
+                        ? "¡Registro completado!"
+                        : "Únete a nuestro arsenal tech"
+                      }
+                    </h2>
+                  )}
+                  <button
+                    onClick={onClose}
+                    className="p-2 rounded-full hover:bg-white/10 transition-colors"
                   >
-                    <Check className="w-10 h-10 text-white" />
-                  </motion.div>
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3 }}
-                  >
-                    <p className="text-xl mb-8">¡Te reconocemos! Acceso inmediato concedido.</p>
-                    <button
-                      onClick={onSubmit}
-                      className="bg-gradient-to-r from-irrelevant-violet to-irrelevant-purple text-white font-medium py-3 px-6 rounded-lg hover:shadow-lg hover:shadow-irrelevant-violet/20 transition-all duration-300"
-                    >
-                      Entrar al arsenal de herramientas 
-                    </button>
-                  </motion.div>
+                    <X className="w-5 h-5 text-irrelevant-light" />
+                  </button>
                 </div>
-              ) : (
-                <div>
-                  {!formSubmitted ? (
-                    <form onSubmit={handleSubmit}>
-                      <div className="flex justify-between mb-8">
-                        {Array.from({ length: getMaxSteps() }).map((_, index) => (
-                          <div
-                            key={index}
-                            className={`h-1 flex-1 mx-1 rounded-full ${
-                              index <= formStep
-                                ? "bg-gradient-to-r from-irrelevant-violet to-irrelevant-purple"
-                                : "bg-white/10"
-                            }`}
-                          />
-                        ))}
-                      </div>
-                      
-                      <AnimatePresence mode="wait">
-                        {formStep === 0 && (
-                          <motion.div
-                            key="step1"
-                            initial="hidden"
-                            animate="visible"
-                            exit="exit"
-                            variants={slideVariants}
-                            className="space-y-5"
-                          >
-                            <div>
-                              <p className="text-irrelevant-light/70 text-sm mb-6">Información básica</p>
-                            </div>
 
-                            <div className="relative">
-                              <label className="block text-sm font-medium mb-1 text-irrelevant-light">
-                                Nombre completo
-                              </label>
-                              <div className="relative">
-                                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-irrelevant-light/50">
-                                  <User className="w-5 h-5" />
-                                </div>
-                                <input
-                                  type="text"
-                                  name="name"
-                                  required
-                                  value={formData.name}
-                                  onChange={handleChange}
-                                  className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-irrelevant-violet/50 text-irrelevant-light"
-                                  placeholder="Tu nombre"
-                                />
+                {checkSecretPhrase() ? (
+                  <div className="text-center py-8">
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ type: "spring", stiffness: 200, damping: 10 }}
+                      className="w-20 h-20 bg-gradient-to-r from-irrelevant-violet to-irrelevant-purple rounded-full flex items-center justify-center mx-auto mb-6"
+                    >
+                      <Check className="w-10 h-10 text-white" />
+                    </motion.div>
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.3 }}
+                    >
+                      <p className="text-xl mb-8">¡Te reconocemos! Acceso inmediato concedido.</p>
+                      <button
+                        onClick={onSubmit}
+                        className="bg-gradient-to-r from-irrelevant-violet to-irrelevant-purple text-white font-medium py-3 px-6 rounded-lg hover:shadow-lg hover:shadow-irrelevant-violet/20 transition-all duration-300"
+                      >
+                        Entrar al arsenal de herramientas 
+                      </button>
+                    </motion.div>
+                  </div>
+                ) : (
+                  <div>
+                    {!formSubmitted ? (
+                      <form onSubmit={handleSubmit}>
+                        <div className="flex justify-between mb-8">
+                          {Array.from({ length: getMaxSteps() }).map((_, index) => (
+                            <div
+                              key={index}
+                              className={`h-1 flex-1 mx-1 rounded-full ${
+                                index <= formStep
+                                  ? "bg-gradient-to-r from-irrelevant-violet to-irrelevant-purple"
+                                  : "bg-white/10"
+                              }`}
+                            />
+                          ))}
+                        </div>
+                        
+                        <AnimatePresence mode="wait">
+                          {formStep === 0 && (
+                            <motion.div
+                              key="step1"
+                              initial="hidden"
+                              animate="visible"
+                              exit="exit"
+                              variants={slideVariants}
+                              className="space-y-5"
+                            >
+                              <div>
+                                <p className="text-irrelevant-light/70 text-sm mb-6">Información básica</p>
                               </div>
-                            </div>
 
-                            <div className="relative">
-                              <label className="block text-sm font-medium mb-1 text-irrelevant-light">
-                                Correo electrónico
-                              </label>
                               <div className="relative">
-                                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-irrelevant-light/50">
-                                  <Mail className="w-5 h-5" />
+                                <label className="block text-sm font-medium mb-1 text-irrelevant-light">
+                                  Nombre completo
+                                </label>
+                                <div className="relative">
+                                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-irrelevant-light/50">
+                                    <User className="w-5 h-5" />
+                                  </div>
+                                  <input
+                                    type="text"
+                                    name="name"
+                                    required
+                                    value={formData.name}
+                                    onChange={handleChange}
+                                    className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-irrelevant-violet/50 text-irrelevant-light"
+                                    placeholder="Tu nombre"
+                                  />
                                 </div>
-                                <input
-                                  type="email"
-                                  name="email"
-                                  required
-                                  value={formData.email}
-                                  onChange={handleChange}
-                                  className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-irrelevant-violet/50 text-irrelevant-light"
-                                  placeholder="tu@email.com"
-                                />
                               </div>
-                            </div>
 
-                            <div className="relative">
-                              <label className="block text-sm font-medium mb-1 text-irrelevant-light">
-                                Teléfono (opcional)
-                              </label>
                               <div className="relative">
-                                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-irrelevant-light/50">
-                                  <Phone className="w-5 h-5" />
+                                <label className="block text-sm font-medium mb-1 text-irrelevant-light">
+                                  Correo electrónico
+                                </label>
+                                <div className="relative">
+                                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-irrelevant-light/50">
+                                    <Mail className="w-5 h-5" />
+                                  </div>
+                                  <input
+                                    type="email"
+                                    name="email"
+                                    required
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-irrelevant-violet/50 text-irrelevant-light"
+                                    placeholder="tu@email.com"
+                                  />
                                 </div>
-                                <input
-                                  type="tel"
-                                  name="phone"
-                                  value={formData.phone}
-                                  onChange={handleChange}
-                                  className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-irrelevant-violet/50 text-irrelevant-light"
-                                  placeholder="Tu número de teléfono"
-                                />
                               </div>
-                            </div>
 
-                            <div className="relative">
-                              <label className="block text-sm font-medium mb-1 text-irrelevant-light">
-                                País
-                              </label>
                               <div className="relative">
-                                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-irrelevant-light/50 z-10">
-                                  <MapPin className="w-5 h-5" />
+                                <label className="block text-sm font-medium mb-1 text-irrelevant-light">
+                                  Teléfono (opcional)
+                                </label>
+                                <div className="relative">
+                                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-irrelevant-light/50">
+                                    <Phone className="w-5 h-5" />
+                                  </div>
+                                  <input
+                                    type="tel"
+                                    name="phone"
+                                    value={formData.phone}
+                                    onChange={handleChange}
+                                    className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-irrelevant-violet/50 text-irrelevant-light"
+                                    placeholder="Tu número de teléfono"
+                                  />
                                 </div>
+                              </div>
+
+                              <div className="relative">
+                                <label className="block text-sm font-medium mb-1 text-irrelevant-light">
+                                  País
+                                </label>
+                                <div className="relative">
+                                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-irrelevant-light/50 z-10">
+                                    <MapPin className="w-5 h-5" />
+                                  </div>
+                                  <Select
+                                    value={formData.country}
+                                    onValueChange={(value) => handleSelectChange("country", value)}
+                                  >
+                                    <SelectTrigger 
+                                      className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-irrelevant-violet/50 text-irrelevant-light h-auto"
+                                    >
+                                      <SelectValue placeholder="Selecciona tu país" />
+                                    </SelectTrigger>
+                                    <SelectContent className="bg-irrelevant-dark border-white/10 text-irrelevant-light max-h-80">
+                                      {countries.map((country) => (
+                                        <SelectItem 
+                                          key={country} 
+                                          value={country}
+                                          className="hover:bg-white/10 focus:bg-white/10 cursor-pointer"
+                                        >
+                                          {country}
+                                        </SelectItem>
+                                      ))}
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+                              </div>
+
+                              <div>
+                                <label className="block text-sm font-medium mb-1 text-irrelevant-light">
+                                  ¿Cuál de estos te describe mejor?
+                                </label>
                                 <Select
-                                  value={formData.country}
-                                  onValueChange={(value) => handleSelectChange("country", value)}
+                                  value={formData.userType}
+                                  onValueChange={(value) => handleSelectChange("userType", value)}
                                 >
                                   <SelectTrigger 
-                                    className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-irrelevant-violet/50 text-irrelevant-light h-auto"
+                                    className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-irrelevant-violet/50 text-irrelevant-light h-auto"
                                   >
-                                    <SelectValue placeholder="Selecciona tu país" />
+                                    <SelectValue placeholder="Selecciona una opción" />
                                   </SelectTrigger>
-                                  <SelectContent className="bg-irrelevant-dark border-white/10 text-irrelevant-light max-h-80">
-                                    {countries.map((country) => (
-                                      <SelectItem 
-                                        key={country} 
-                                        value={country}
-                                        className="hover:bg-white/10 focus:bg-white/10 cursor-pointer"
-                                      >
-                                        {country}
-                                      </SelectItem>
-                                    ))}
+                                  <SelectContent className="bg-irrelevant-dark border-white/10 text-irrelevant-light">
+                                    <SelectItem 
+                                      value="Emprendedor"
+                                      className="hover:bg-white/10 focus:bg-white/10 cursor-pointer"
+                                    >
+                                      Emprendedor con negocio propio
+                                    </SelectItem>
+                                    <SelectItem 
+                                      value="Freelancer"
+                                      className="hover:bg-white/10 focus:bg-white/10 cursor-pointer"
+                                    >
+                                      Profesional independiente / freelancer
+                                    </SelectItem>
+                                    <SelectItem 
+                                      value="Persona"
+                                      className="hover:bg-white/10 focus:bg-white/10 cursor-pointer"
+                                    >
+                                      Persona interesada en aprender y explorar
+                                    </SelectItem>
+                                    <SelectItem 
+                                      value="Empresa"
+                                      className="hover:bg-white/10 focus:bg-white/10 cursor-pointer"
+                                    >
+                                      Empresa
+                                    </SelectItem>
                                   </SelectContent>
                                 </Select>
                               </div>
-                            </div>
 
-                            <div>
-                              <label className="block text-sm font-medium mb-1 text-irrelevant-light">
-                                ¿Cuál de estos te describe mejor?
-                              </label>
-                              <Select
-                                value={formData.userType}
-                                onValueChange={(value) => handleSelectChange("userType", value)}
-                              >
-                                <SelectTrigger 
-                                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-irrelevant-violet/50 text-irrelevant-light h-auto"
+                              <div className="relative group">
+                                <div className="flex justify-between items-center">
+                                  <label className="block text-sm font-medium mb-1 text-irrelevant-light flex items-center gap-1">
+                                    <div onClick={toggleSecretMode}>
+                                      <Key className={`w-4 h-4 ${secretMode ? "text-irrelevant-violet" : "text-irrelevant-light/50"} cursor-pointer`} />
+                                    </div>
+                                    <span>¿Ya perteneces al club?</span>
+                                  </label>
+                                  <button 
+                                    type="button"
+                                    onClick={toggleSecretMode}
+                                    className="text-xs text-irrelevant-light/50 hover:text-irrelevant-violet"
+                                  >
+                                    {secretMode ? "Ocultar" : "Mostrar"}
+                                  </button>
+                                </div>
+                                
+                                <motion.div
+                                  initial={false}
+                                  animate={{ 
+                                    height: secretMode ? "auto" : "0",
+                                    opacity: secretMode ? 1 : 0
+                                  }}
+                                  transition={{ duration: 0.3 }}
+                                  className="overflow-hidden"
                                 >
-                                  <SelectValue placeholder="Selecciona una opción" />
-                                </SelectTrigger>
-                                <SelectContent className="bg-irrelevant-dark border-white/10 text-irrelevant-light">
-                                  <SelectItem 
-                                    value="Emprendedor"
-                                    className="hover:bg-white/10 focus:bg-white/10 cursor-pointer"
-                                  >
-                                    Emprendedor con negocio propio
-                                  </SelectItem>
-                                  <SelectItem 
-                                    value="Freelancer"
-                                    className="hover:bg-white/10 focus:bg-white/10 cursor-pointer"
-                                  >
-                                    Profesional independiente / freelancer
-                                  </SelectItem>
-                                  <SelectItem 
-                                    value="Persona"
-                                    className="hover:bg-white/10 focus:bg-white/10 cursor-pointer"
-                                  >
-                                    Persona interesada en aprender y explorar
-                                  </SelectItem>
-                                  <SelectItem 
-                                    value="Empresa"
-                                    className="hover:bg-white/10 focus:bg-white/10 cursor-pointer"
-                                  >
-                                    Empresa
-                                  </SelectItem>
-                                </SelectContent>
-                              </Select>
-                            </div>
-
-                            <div className="relative group">
-                              <div className="flex justify-between items-center">
-                                <label className="block text-sm font-medium mb-1 text-irrelevant-light flex items-center gap-1">
-                                  <div onClick={toggleSecretMode}>
-                                    <Key className={`w-4 h-4 ${secretMode ? "text-irrelevant-violet" : "text-irrelevant-light/50"} cursor-pointer`} />
+                                  <div className="py-2">
+                                    <input
+                                      type="text"
+                                      name="secretPhrase"
+                                      value={formData.secretPhrase}
+                                      onChange={handleChange}
+                                      className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-irrelevant-violet/50 text-irrelevant-light"
+                                      placeholder="Ingresa la frase secreta para acceso inmediato"
+                                    />
+                                    <p className="text-xs text-irrelevant-light/70 mt-1">
+                                      Si ya formas parte del club <span className="italic">irrelevant</span>, introduce la frase secreta.
+                                    </p>
                                   </div>
-                                  <span>¿Ya perteneces al club?</span>
-                                </label>
-                                <button 
-                                  type="button"
-                                  onClick={toggleSecretMode}
-                                  className="text-xs text-irrelevant-light/50 hover:text-irrelevant-violet"
+                                </motion.div>
+                              </div>
+
+                              <div className="flex justify-end gap-2 pt-2">
+                                <button
+                                  type="submit"
+                                  className="flex items-center gap-2 bg-gradient-to-r from-irrelevant-violet to-irrelevant-purple text-white font-medium py-3 px-6 rounded-lg hover:shadow-lg hover:shadow-irrelevant-violet/20 transition-all duration-300"
+                                  disabled={isSubmitting}
                                 >
-                                  {secretMode ? "Ocultar" : "Mostrar"}
+                                  {formData.userType ? <span>Continuar</span> : <span>Acceder</span>}
+                                  <ArrowRight className="w-5 h-5" />
                                 </button>
                               </div>
-                              
-                              <motion.div
-                                initial={false}
-                                animate={{ 
-                                  height: secretMode ? "auto" : "0",
-                                  opacity: secretMode ? 1 : 0
-                                }}
-                                transition={{ duration: 0.3 }}
-                                className="overflow-hidden"
-                              >
-                                <div className="py-2">
+                            </motion.div>
+                          )}
+
+                          {formStep === 1 && showCompanyFields && (
+                            <motion.div
+                              key="step2-company"
+                              initial="hidden"
+                              animate="visible"
+                              exit="exit"
+                              variants={slideVariants}
+                              className="space-y-5"
+                            >
+                              <div>
+                                <p className="text-irrelevant-light/70 text-sm mb-6">Cuéntanos sobre tu empresa</p>
+                              </div>
+
+                              <div>
+                                <label className="block text-sm font-medium mb-1 text-irrelevant-light">
+                                  ¿A qué se dedica tu empresa?
+                                </label>
+                                <div className="relative">
+                                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-irrelevant-light/50">
+                                    <Building className="w-5 h-5" />
+                                  </div>
                                   <input
                                     type="text"
-                                    name="secretPhrase"
-                                    value={formData.secretPhrase}
+                                    name="company"
+                                    value={formData.company}
                                     onChange={handleChange}
-                                    className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-irrelevant-violet/50 text-irrelevant-light"
-                                    placeholder="Ingresa la frase secreta para acceso inmediato"
+                                    className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-irrelevant-violet/50 text-irrelevant-light"
+                                    placeholder="Sector y tipo de empresa"
+                                    required
                                   />
-                                  <p className="text-xs text-irrelevant-light/70 mt-1">
-                                    Si ya formas parte del club <span className="italic">irrelevant</span>, introduce la frase secreta.
-                                  </p>
                                 </div>
-                              </motion.div>
-                            </div>
+                              </div>
 
-                            <div className="flex justify-end gap-2 pt-2">
-                              <button
-                                type="submit"
-                                className="flex items-center gap-2 bg-gradient-to-r from-irrelevant-violet to-irrelevant-purple text-white font-medium py-3 px-6 rounded-lg hover:shadow-lg hover:shadow-irrelevant-violet/20 transition-all duration-300"
-                                disabled={isSubmitting}
-                              >
-                                {formData.userType ? <span>Continuar</span> : <span>Acceder</span>}
-                                <ArrowRight className="w-5 h-5" />
-                              </button>
-                            </div>
-                          </motion.div>
-                        )}
+                              <div>
+                                <label className="block text-sm font-medium mb-1 text-irrelevant-light">
+                                  ¿Qué te gustaría automatizar en tu empresa?
+                                </label>
+                                <textarea
+                                  name="automationNeeds"
+                                  value={formData.automationNeeds}
+                                  onChange={handleChange}
+                                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-irrelevant-violet/50 text-irrelevant-light min-h-[100px]"
+                                  placeholder="Describe procesos o tareas que te gustaría mejorar"
+                                  required
+                                />
+                              </div>
 
-                        {formStep === 1 && showCompanyFields && (
-                          <motion.div
-                            key="step2-company"
-                            initial="hidden"
-                            animate="visible"
-                            exit="exit"
-                            variants={slideVariants}
-                            className="space-y-5"
-                          >
-                            <div>
-                              <p className="text-irrelevant-light/70 text-sm mb-6">Cuéntanos sobre tu empresa</p>
-                            </div>
-
-                            <div>
-                              <label className="block text-sm font-medium mb-1 text-irrelevant-light">
-                                ¿A qué se dedica tu empresa?
-                              </label>
-                              <div className="relative">
-                                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-irrelevant-light/50">
-                                  <Building className="w-5 h-5" />
-                                </div>
+                              <div>
+                                <label className="block text-sm font-medium mb-1 text-irrelevant-light">
+                                  Perfil de LinkedIn o página web (opcional)
+                                </label>
                                 <input
                                   type="text"
-                                  name="company"
-                                  value={formData.company}
+                                  name="linkedinUrl"
+                                  value={formData.linkedinUrl}
                                   onChange={handleChange}
-                                  className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-irrelevant-violet/50 text-irrelevant-light"
-                                  placeholder="Sector y tipo de empresa"
-                                  required
+                                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-irrelevant-violet/50 text-irrelevant-light"
+                                  placeholder="https://"
                                 />
                               </div>
-                            </div>
 
-                            <div>
-                              <label className="block text-sm font-medium mb-1 text-irrelevant-light">
-                                ¿Qué te gustaría automatizar en tu empresa?
-                              </label>
-                              <textarea
-                                name="automationNeeds"
-                                value={formData.automationNeeds}
-                                onChange={handleChange}
-                                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-irrelevant-violet/50 text-irrelevant-light min-h-[100px]"
-                                placeholder="Describe procesos o tareas que te gustaría mejorar"
-                                required
-                              />
-                            </div>
+                              <div className="flex justify-between pt-2">
+                                <button
+                                  type="button"
+                                  onClick={handlePrevStep}
+                                  className="bg-white/5 hover:bg-white/10 text-irrelevant-light font-medium py-3 px-6 rounded-lg transition-all duration-300"
+                                >
+                                  Atrás
+                                </button>
+                                <button
+                                  type="submit"
+                                  className="flex items-center gap-2 bg-gradient-to-r from-irrelevant-violet to-irrelevant-purple text-white font-medium py-3 px-6 rounded-lg hover:shadow-lg hover:shadow-irrelevant-violet/20 transition-all duration-300"
+                                  disabled={isSubmitting}
+                                >
+                                  <span>Acceder</span>
+                                  <ArrowRight className="w-5 h-5" />
+                                </button>
+                              </div>
+                            </motion.div>
+                          )}
 
-                            <div>
-                              <label className="block text-sm font-medium mb-1 text-irrelevant-light">
-                                Perfil de LinkedIn o página web (opcional)
-                              </label>
-                              <input
-                                type="text"
-                                name="linkedinUrl"
-                                value={formData.linkedinUrl}
-                                onChange={handleChange}
-                                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-irrelevant-violet/50 text-irrelevant-light"
-                                placeholder="https://"
-                              />
-                            </div>
+                          {formStep === 1 && showPersonFields && (
+                            <motion.div
+                              key="step2-person"
+                              initial="hidden"
+                              animate="visible"
+                              exit="exit"
+                              variants={slideVariants}
+                              className="space-y-5"
+                            >
+                              <div>
+                                <p className="text-irrelevant-light/70 text-sm mb-6">Queremos conocerte mejor</p>
+                              </div>
 
-                            <div className="flex justify-between pt-2">
-                              <button
-                                type="button"
-                                onClick={handlePrevStep}
-                                className="bg-white/5 hover:bg-white/10 text-irrelevant-light font-medium py-3 px-6 rounded-lg transition-all duration-300"
-                              >
-                                Atrás
-                              </button>
-                              <button
-                                type="submit"
-                                className="flex items-center gap-2 bg-gradient-to-r from-irrelevant-violet to-irrelevant-purple text-white font-medium py-3 px-6 rounded-lg hover:shadow-lg hover:shadow-irrelevant-violet/20 transition-all duration-300"
-                                disabled={isSubmitting}
-                              >
-                                <span>Acceder</span>
-                                <ArrowRight className="w-5 h-5" />
-                              </button>
-                            </div>
-                          </motion.div>
-                        )}
-
-                        {formStep === 1 && showPersonFields && (
-                          <motion.div
-                            key="step2-person"
-                            initial="hidden"
-                            animate="visible"
-                            exit="exit"
-                            variants={slideVariants}
-                            className="space-y-5"
-                          >
-                            <div>
-                              <p className="text-irrelevant-light/70 text-sm mb-6">Queremos conocerte mejor</p>
-                            </div>
-
-                            <div>
-                              <label className="block text-sm font-medium mb-1 text-irrelevant-light">
-                                ¿Qué te interesa aprender?
-                              </label>
-                              <div className="relative">
-                                <div className="absolute left-3 top-5 -translate-y-1/2 text-irrelevant-light/50">
-                                  <Briefcase className="w-5 h-5" />
+                              <div>
+                                <label className="block text-sm font-medium mb-1 text-irrelevant-light">
+                                  ¿Qué te interesa aprender?
+                                </label>
+                                <div className="relative">
+                                  <div className="absolute left-3 top-5 -translate-y-1/2 text-irrelevant-light/50">
+                                    <Briefcase className="w-5 h-5" />
+                                  </div>
+                                  <textarea
+                                    name="interestArea"
+                                    value={formData.interestArea}
+                                    onChange={handleChange}
+                                    className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-irrelevant-violet/50 text-irrelevant-light min-h-[80px]"
+                                    placeholder="Áreas de interés, tecnologías, etc."
+                                    required
+                                  />
                                 </div>
-                                <textarea
-                                  name="interestArea"
-                                  value={formData.interestArea}
+                              </div>
+
+                              <div>
+                                <label className="block text-sm font-medium mb-1 text-irrelevant-light">
+                                  ¿Qué herramientas has usado antes?
+                                </label>
+                                <input
+                                  type="text"
+                                  name="toolsUsed"
+                                  value={formData.toolsUsed}
                                   onChange={handleChange}
-                                  className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-irrelevant-violet/50 text-irrelevant-light min-h-[80px]"
-                                  placeholder="Áreas de interés, tecnologías, etc."
+                                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-irrelevant-violet/50 text-irrelevant-light"
+                                  placeholder="Herramientas tech, plataformas, programas..."
                                   required
                                 />
                               </div>
-                            </div>
 
-                            <div>
-                              <label className="block text-sm font-medium mb-1 text-irrelevant-light">
-                                ¿Qué herramientas has usado antes?
-                              </label>
-                              <input
-                                type="text"
-                                name="toolsUsed"
-                                value={formData.toolsUsed}
-                                onChange={handleChange}
-                                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-irrelevant-violet/50 text-irrelevant-light"
-                                placeholder="Herramientas tech, plataformas, programas..."
-                                required
-                              />
-                            </div>
+                              <div>
+                                <label className="block text-sm font-medium mb-1 text-irrelevant-light">
+                                  ¿Tienes algún proyecto en mente?
+                                </label>
+                                <textarea
+                                  name="projectDescription"
+                                  value={formData.projectDescription}
+                                  onChange={handleChange}
+                                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-irrelevant-violet/50 text-irrelevant-light min-h-[80px]"
+                                  placeholder="Cuéntanos qué te gustaría lograr con estas herramientas"
+                                  required
+                                />
+                              </div>
 
-                            <div>
-                              <label className="block text-sm font-medium mb-1 text-irrelevant-light">
-                                ¿Tienes algún proyecto en mente?
-                              </label>
-                              <textarea
-                                name="projectDescription"
-                                value={formData.projectDescription}
-                                onChange={handleChange}
-                                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-irrelevant-violet/50 text-irrelevant-light min-h-[80px]"
-                                placeholder="Cuéntanos qué te gustaría lograr con estas herramientas"
-                                required
-                              />
-                            </div>
-
-                            <div className="flex justify-between pt-2">
-                              <button
-                                type="button"
-                                onClick={handlePrevStep}
-                                className="bg-white/5 hover:bg-white/10 text-irrelevant-light font-medium py-3 px-6 rounded-lg transition-all duration-300"
-                              >
-                                Atrás
-                              </button>
-                              <button
-                                type="submit"
-                                className="flex items-center gap-2 bg-gradient-to-r from-irrelevant-violet to-irrelevant-purple text-white font-medium py-3 px-6 rounded-lg hover:shadow-lg hover:shadow-irrelevant-violet/20 transition-all duration-300"
-                                disabled={isSubmitting}
-                              >
-                                <span>Acceder</span>
-                                <ArrowRight className="w-5 h-5" />
-                              </button>
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </form>
-                  ) : (
-                    <div className="text-center py-10">
-                      <motion.div
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        transition={{ type: "spring", stiffness: 200, damping: 10 }}
-                        className="w-20 h-20 bg-gradient-to-r from-irrelevant-violet to-irrelevant-purple rounded-full flex items-center justify-center mx-auto mb-6"
-                      >
-                        <Check className="w-10 h-10 text-white" />
-                      </motion.div>
-                      
-                      <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.3 }}
-                      >
-                        <p className="text-xl mb-4">¡Estamos abriendo las puertas del arsenal!</p>
-                        <p className="text-irrelevant-light/70 mb-8">
-                          Preparando tu experiencia personalizada...
-                        </p>
+                              <div className="flex justify-between pt-2">
+                                <button
+                                  type="button"
+                                  onClick={handlePrevStep}
+                                  className="bg-white/5 hover:bg-white/10 text-irrelevant-light font-medium py-3 px-6 rounded-lg transition-all duration-300"
+                                >
+                                  Atrás
+                                </button>
+                                <button
+                                  type="submit"
+                                  className="flex items-center gap-2 bg-gradient-to-r from-irrelevant-violet to-irrelevant-purple text-white font-medium py-3 px-6 rounded-lg hover:shadow-lg hover:shadow-irrelevant-violet/20 transition-all duration-300"
+                                  disabled={isSubmitting}
+                                >
+                                  <span>Acceder</span>
+                                  <ArrowRight className="w-5 h-5" />
+                                </button>
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </form>
+                    ) : (
+                      <div className="text-center py-10">
+                        <motion.div
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          transition={{ type: "spring", stiffness: 200, damping: 10 }}
+                          className="w-20 h-20 bg-gradient-to-r from-irrelevant-violet to-irrelevant-purple rounded-full flex items-center justify-center mx-auto mb-6"
+                        >
+                          <Check className="w-10 h-10 text-white" />
+                        </motion.div>
                         
                         <motion.div
-                          className="h-2 bg-white/10 rounded-full max-w-md mx-auto overflow-hidden"
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
-                          transition={{ delay: 0.5 }}
+                          transition={{ delay: 0.3 }}
                         >
+                          <p className="text-xl mb-4">¡Estamos abriendo las puertas del arsenal!</p>
+                          <p className="text-irrelevant-light/70 mb-8">
+                            Preparando tu experiencia personalizada...
+                          </p>
+                          
                           <motion.div
-                            className="h-full bg-gradient-to-r from-irrelevant-violet to-irrelevant-purple"
-                            initial={{ width: "0%" }}
-                            animate={{ width: "100%" }}
-                            transition={{ duration: 1.5, ease: "easeInOut" }}
-                          />
+                            className="h-2 bg-white/10 rounded-full max-w-md mx-auto overflow-hidden"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.5 }}
+                          >
+                            <motion.div
+                              className="h-full bg-gradient-to-r from-irrelevant-violet to-irrelevant-purple"
+                              initial={{ width: "0%" }}
+                              animate={{ width: "100%" }}
+                              transition={{ duration: 1.5, ease: "easeInOut" }}
+                            />
+                          </motion.div>
                         </motion.div>
-                      </motion.div>
-                    </div>
-                  )}
-                </div>
-              )}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
           </motion.div>
         </>
