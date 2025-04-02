@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Check, Lock, User, Mail, Building, Briefcase, ArrowRight, Key, MapPin } from "lucide-react";
+import { X, Check, Lock, User, Mail, Building, Briefcase, ArrowRight, Key, MapPin, Loader2, Phone } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { registerUser, verifySecretPhrase } from '../services/api';
 
@@ -17,6 +17,32 @@ const countries = [
   "México", "Nicaragua", "Panamá", "Paraguay", "Perú", "Puerto Rico", 
   "República Dominicana", "Uruguay", "Venezuela", "Otro"
 ];
+
+// Componente Loader personalizado para mejorar la experiencia de usuario
+const CustomLoader: React.FC = () => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5 }}
+      className="flex flex-col items-center justify-center"
+    >
+      <motion.div
+        className="w-16 h-16 border-4 border-t-transparent border-white rounded-full"
+        animate={{ rotate: 360 }}
+        transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+      />
+      <motion.p
+        className="mt-4 text-white text-lg"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.2 }}
+      >
+        Cargando...
+      </motion.p>
+    </motion.div>
+  );
+};
 
 const RegistrationModal: React.FC<RegistrationModalProps> = ({
   isOpen,
@@ -35,6 +61,7 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
     toolsUsed: "",
     projectDescription: "",
     secretPhrase: "",
+    phone: ""
   });
 
   const [formStep, setFormStep] = useState(0);
@@ -134,6 +161,7 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
       email: formData.email,
       country: formData.country,
       userType: formData.userType,
+      phone: formData.phone,
       // Agregar campos condicionales según el tipo de usuario
       ...(formData.userType === 'Empresa' && {
         company: formData.company,
@@ -222,7 +250,12 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
             exit="exit"
             variants={modalVariants}
           >
-            <div className="glass-panel w-full max-w-2xl rounded-xl p-6 sm:p-8 overflow-hidden">
+            <div className="glass-panel w-full max-w-2xl rounded-xl p-6 sm:p-8 overflow-hidden relative">
+              {isSubmitting && (
+                <div className="absolute inset-0 bg-black/40 flex items-center justify-center z-50">
+                  <CustomLoader />
+                </div>
+              )}
               <div className="flex justify-between items-center mb-6">
                 {checkSecretPhrase() ? (
                   <h2 className="text-2xl font-providence text-gradient flex items-center gap-2">
@@ -336,6 +369,25 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
                                   onChange={handleChange}
                                   className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-irrelevant-violet/50 text-irrelevant-light"
                                   placeholder="tu@email.com"
+                                />
+                              </div>
+                            </div>
+
+                            <div className="relative">
+                              <label className="block text-sm font-medium mb-1 text-irrelevant-light">
+                                Teléfono (opcional)
+                              </label>
+                              <div className="relative">
+                                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-irrelevant-light/50">
+                                  <Phone className="w-5 h-5" />
+                                </div>
+                                <input
+                                  type="tel"
+                                  name="phone"
+                                  value={formData.phone}
+                                  onChange={handleChange}
+                                  className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-irrelevant-violet/50 text-irrelevant-light"
+                                  placeholder="Tu número de teléfono"
                                 />
                               </div>
                             </div>
@@ -460,6 +512,7 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
                               <button
                                 type="submit"
                                 className="flex items-center gap-2 bg-gradient-to-r from-irrelevant-violet to-irrelevant-purple text-white font-medium py-3 px-6 rounded-lg hover:shadow-lg hover:shadow-irrelevant-violet/20 transition-all duration-300"
+                                disabled={isSubmitting}
                               >
                                 {formData.userType ? <span>Continuar</span> : <span>Acceder</span>}
                                 <ArrowRight className="w-5 h-5" />
@@ -540,6 +593,7 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
                               <button
                                 type="submit"
                                 className="flex items-center gap-2 bg-gradient-to-r from-irrelevant-violet to-irrelevant-purple text-white font-medium py-3 px-6 rounded-lg hover:shadow-lg hover:shadow-irrelevant-violet/20 transition-all duration-300"
+                                disabled={isSubmitting}
                               >
                                 <span>Acceder</span>
                                 <ArrowRight className="w-5 h-5" />
@@ -620,6 +674,7 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
                               <button
                                 type="submit"
                                 className="flex items-center gap-2 bg-gradient-to-r from-irrelevant-violet to-irrelevant-purple text-white font-medium py-3 px-6 rounded-lg hover:shadow-lg hover:shadow-irrelevant-violet/20 transition-all duration-300"
+                                disabled={isSubmitting}
                               >
                                 <span>Acceder</span>
                                 <ArrowRight className="w-5 h-5" />
